@@ -1,0 +1,12 @@
+SURAT MASUK
+    - UUID
+    - NO URUT
+    - NO AGENDA
+    - KODE ARSIP
+    - ASAL
+    - ALAMAT
+    - TANGGAL TERIMA
+    - TANGGAL SURAT
+    - NOMER SURAT
+    - TUJUAN
+    - PERIHAL
