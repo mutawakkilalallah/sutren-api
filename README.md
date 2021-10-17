@@ -1,2 +1,2 @@
 # sutren-api
-RESTful API for SUTREN Pondok Pesantren Nurul Jadid
+RESTful API for SUTREN APP Pondok Pesantren Nurul Jadid
