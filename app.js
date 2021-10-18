@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 
 const suratRouter = require("./app/surat-masuk/router");
+const userRouter = require("./app/user/router");
 
 // konfigurasi multer
 const documentStorage = multer.diskStorage({
@@ -42,5 +43,7 @@ app.use(
 
 // routing surat masuk
 app.use("/api/surat-masuk/", suratRouter);
+// routing user
+app.use("/api/user/", userRouter);
 
 app.listen(port);
