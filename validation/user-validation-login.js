@@ -1,12 +1,7 @@
 const { check, validationResult } = require("express-validator");
 
 // kolom create yang akan divalidasi
-const rulesCreate = [
-  check("nama")
-    .notEmpty()
-    .withMessage("nama user harus diisi")
-    .isString()
-    .withMessage("nama user harus tidak boleh angka"),
+const rulesLogin = [
   check("username")
     .notEmpty()
     .withMessage("username harus diisi")
@@ -20,8 +15,8 @@ const rulesCreate = [
 ];
 
 // proses validasi
-const validationCreate = [
-  rulesCreate,
+const validationLogin = [
+  rulesLogin,
   (req, res, next) => {
     // mengambil data hasil validasi
     const errors = validationResult(req);
@@ -43,4 +38,4 @@ const validationCreate = [
   },
 ];
 
-module.exports = validationCreate;
+module.exports = validationLogin;
