@@ -21,10 +21,9 @@ module.exports = {
       if (totalData < 1) {
         // jika tidak ada semua surat masuk
 
-        // response not found
-        res.status(404).json({
-          message: "Surat tidak ditemukan",
-        });
+        // response array kosong
+        empetyData = [];
+        res.status(200).json(empetyData);
       } else {
         // jika ada semua surat  masuk
 
