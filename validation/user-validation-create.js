@@ -10,7 +10,7 @@ const rulesCreate = [
   check("username")
     .notEmpty()
     .withMessage("username harus diisi")
-    .isLength({ min: 8, max: 12 })
+    .isLength({ min: 6, max: 12 })
     .withMessage("username minimal 6 digit dan maksimal 12 digit"),
   check("password")
     .notEmpty()

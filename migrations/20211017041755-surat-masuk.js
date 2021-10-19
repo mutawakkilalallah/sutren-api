@@ -8,12 +8,44 @@ module.exports = {
         primaryKey: true,
         allowNull: false,
       },
-      nomer: {
+      nomer_urut: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      nomer_agenda: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      kode_arsip: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      tanggal_terima: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      tanggal_surat: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      asal: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      alamat: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       tujuan: {
         type: Sequelize.STRING,
+        allowNull: false,
+      },
+      perihal: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      keterangan: {
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       document: {
@@ -29,12 +61,6 @@ module.exports = {
         allowNull: false,
       },
     });
-
-    // await queryInterface.addConstraint("surat-masuk", {
-    //   type: "unique",
-    //   field: ["nomer"],
-    //   name: "UNIQUE_NOMER_SURAT",
-    // });
   },
 
   down: async (queryInterface, Sequelize) => {

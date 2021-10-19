@@ -2,8 +2,22 @@ const { check, validationResult } = require("express-validator");
 
 // kolom create yang akan divalidasi
 const rulesCreate = [
-  check("nomer").notEmpty().withMessage("nomer surat harus diisi"),
+  check("nomer_urut").notEmpty().withMessage("nomer urut surat harus diisi"),
+  check("nomer_agenda")
+    .notEmpty()
+    .withMessage("nomer agenda surat harus diisi"),
+  check("kode_arsip").notEmpty().withMessage("kode arsip surat harus diisi"),
+  check("tanggal_terima")
+    .notEmpty()
+    .withMessage("tanggal terima surat harus diisi"),
+  check("tanggal surat")
+    .notEmpty()
+    .withMessage("tanggal surat surat harus diisi"),
+  check("asal").notEmpty().withMessage("asal surat harus diisi"),
+  check("alamat").notEmpty().withMessage("alamat surat harus diisi"),
   check("tujuan").notEmpty().withMessage("tujuan surat harus diisi"),
+  check("perihal").notEmpty().withMessage("perihal surat harus diisi"),
+  check("keterangan").notEmpty().withMessage("keterangan surat harus diisi"),
 ];
 
 // proses validasi

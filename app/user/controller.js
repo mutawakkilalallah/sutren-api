@@ -31,10 +31,11 @@ module.exports = {
         nama: req.body.nama,
         username: req.body.username,
         password: password,
+        akses: req.body.akses,
       });
       // response berhasil
       res.status(201).json({
-        message: "berhasil menambhkan user",
+        message: "berhasil menambahkan user",
       });
     } catch (err) {
       // jika gagal menambahkan user
@@ -84,7 +85,6 @@ module.exports = {
       const token = await jwt.sign({ uuid: user.uuid }, JWT_SECRET_KEY, {
         expiresIn: "1h",
       });
-      console.log(token);
       // response berhasil
       res
         .status(200)

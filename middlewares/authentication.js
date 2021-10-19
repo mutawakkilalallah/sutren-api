@@ -11,9 +11,9 @@ module.exports = async (req, res, next) => {
     if (err) {
       // jika token tidak valid
       res.status(403).json({
-        code: 403,
-        status: "FORBIDDEN",
-        message: "invalid token",
+        code: 401,
+        status: "UNATHORIZED",
+        message: "silahkan login terlebih dahulu",
       });
     } else {
       // jika token valid

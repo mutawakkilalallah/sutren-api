@@ -91,9 +91,6 @@ module.exports = {
     try {
       // jika berhasil menambah data surat
 
-      // mengambil data inputan
-      const nomer = req.body.nomer;
-      const tujuan = req.body.tujuan;
       // cek apakah ada document
       if (!req.file) {
         // jika tidak ada document
@@ -106,12 +103,20 @@ module.exports = {
         });
       } else {
         // jika ada document
-        const document = req.file.path;
+
         // insert data ke database
         await SuratMasuk.create({
-          nomer: nomer,
-          tujuan: tujuan,
-          document: document,
+          nomer_urut: req.body.nomer_urut,
+          nomer_agenda: req.body.nomer_agenda,
+          kode_arsip: req.body.kode_arsip,
+          tanggal_terima: req.body.tanggal_terima,
+          tanggal_surat: req.body.tanggal_surat,
+          asal: req.body.asal,
+          alamat: req.body.alamat,
+          tujuan: req.body.tujuan,
+          perihal: req.body.perihal,
+          keterangan: req.body.keterangan,
+          document: req.file.path,
         });
         // response berhasil
         res.status(201).json({
@@ -143,9 +148,7 @@ module.exports = {
           uuid: uuid,
         },
       });
-      // mengambil data inputan
-      const nomer = req.body.nomer;
-      const tujuan = req.body.tujuan;
+      // cek hasil data di database
       if (data < 1) {
         // jika tidak ada data surat
         res.status(200).json({
@@ -159,8 +162,16 @@ module.exports = {
           // update ke database
           await SuratMasuk.update(
             {
-              nomer: nomer,
-              tujuan: tujuan,
+              nomer_urut: req.body.nomer_urut,
+              nomer_agenda: req.body.nomer_agenda,
+              kode_arsip: req.body.kode_arsip,
+              tanggal_terima: req.body.tanggal_terima,
+              tanggal_surat: req.body.tanggal_surat,
+              asal: req.body.asal,
+              alamat: req.body.alamat,
+              tujuan: req.body.tujuan,
+              perihal: req.body.perihal,
+              keterangan: req.body.keterangan,
             },
             {
               where: {
@@ -171,16 +182,22 @@ module.exports = {
         } else {
           // jika mengubah document
 
-          // mengambil data inputan document
-          const document = req.file.path;
           // menghapus document yang lama
           fs.unlinkSync(data.document);
           // update ke database
           await SuratMasuk.update(
             {
-              nomer: nomer,
-              tujuan: tujuan,
-              document: document,
+              nomer_urut: req.body.nomer_urut,
+              nomer_agenda: req.body.nomer_agenda,
+              kode_arsip: req.body.kode_arsip,
+              tanggal_terima: req.body.tanggal_terima,
+              tanggal_surat: req.body.tanggal_surat,
+              asal: req.body.asal,
+              alamat: req.body.alamat,
+              tujuan: req.body.tujuan,
+              perihal: req.body.perihal,
+              keterangan: req.body.keterangan,
+              document: req.file.path,
             },
             {
               where: {

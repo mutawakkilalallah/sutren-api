@@ -9,9 +9,50 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      nomer: { type: DataTypes.STRING, allowNull: false },
-      tujuan: { type: DataTypes.STRING, allowNull: false },
-      document: { type: DataTypes.STRING, allowNull: false },
+      nomer_urut: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      nomer_agenda: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      kode_arsip: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      tanggal_terima: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      tanggal_surat: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      asal: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      alamat: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      tujuan: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      perihal: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      keterangan: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      document: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       createdAt: {
         field: "createdAt",
         type: DataTypes.DATE,
