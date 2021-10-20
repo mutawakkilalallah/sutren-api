@@ -24,6 +24,17 @@ module.exports = {
           message: "username sudah ada",
         });
       }
+      // cek gambar
+      if (!req.file) {
+        // jika tidak ada gambar
+
+        // response bad request
+        return res.status(400).json({
+          code: 400,
+          status: "BAD REQUEST",
+          message: "gambar harus disertakan dengan format png, jpeg atau jpg",
+        });
+      }
       // hashing password
       const password = await bcrypt.hash(req.body.password, 10);
       // menambahkan user ke database
@@ -32,6 +43,7 @@ module.exports = {
         username: req.body.username,
         password: password,
         akses: req.body.akses,
+        picture: req.file.path,
       });
       // response berhasil
       res.status(201).json({

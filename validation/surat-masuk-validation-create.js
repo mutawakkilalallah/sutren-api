@@ -10,11 +10,14 @@ const rulesCreate = [
   check("tanggal_terima")
     .notEmpty()
     .withMessage("tanggal terima surat harus diisi"),
-  check("tanggal surat")
+  check("tanggal_surat")
     .notEmpty()
     .withMessage("tanggal surat surat harus diisi"),
   check("asal").notEmpty().withMessage("asal surat harus diisi"),
   check("alamat").notEmpty().withMessage("alamat surat harus diisi"),
+  check("nomer_surat")
+    .notEmpty()
+    .withMessage("tanggal surat surat harus diisi"),
   check("tujuan").notEmpty().withMessage("tujuan surat harus diisi"),
   check("perihal").notEmpty().withMessage("perihal surat harus diisi"),
   check("keterangan").notEmpty().withMessage("keterangan surat harus diisi"),

@@ -28,6 +28,10 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
+      nomer_surat: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       asal: {
         type: Sequelize.STRING,
         allowNull: false,

@@ -17,6 +17,7 @@ const rulesCreate = [
     .withMessage("password harus diisi")
     .isLength({ min: 8 })
     .withMessage("password minimal 8 digit"),
+  check("akses").notEmpty().withMessage("akses harus ditentukan"),
 ];
 
 // proses validasi
