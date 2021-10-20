@@ -3,11 +3,11 @@ const multer = require("multer");
 module.exports = {
   documentStorage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "upload/documents");
+      cb(null, "upload/pictures");
     },
     filename: (req, file, cb) => {
       const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      cb(null, "document-" + uniqueSuffix + ".pdf");
+      cb(null, "document-" + uniqueSuffix);
     },
   }),
 

@@ -7,13 +7,7 @@ const authentication = require("../../middlewares/authentication");
 const authorization = require("../../middlewares/authorization");
 
 // routing daftar user
-router.post(
-  "/register",
-  authentication,
-  authorization,
-  validationCreate,
-  create
-);
+router.post("/register", authorization, validationCreate, create);
 // routing login user
 router.post("/login", validationLogin, login);
 
