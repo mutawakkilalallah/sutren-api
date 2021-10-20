@@ -18,7 +18,7 @@ app.use("/upload", express.static(path.join(__dirname, "upload")));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // multer
-app.use(multer({ storage: documentStorage }).single("picture"));
+app.use(multer({ storage: documentStorage }).single("document"));
 // routing surat masuk
 app.use("/api/surat-masuk/", suratRouter);
 // routing user
