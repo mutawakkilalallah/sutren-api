@@ -44,7 +44,7 @@ module.exports = {
       res.status(500).json({
         code: 500,
         status: "Terjadi kesalahan pada server",
-        message: err,
+        message: err.message,
       });
     }
   },
@@ -92,9 +92,8 @@ module.exports = {
       // jika berhasil menambah data surat
 
       // cek apakah ada document
-      if (!req.file) {
+      if (!req.files.document) {
         // jika tidak ada document
-
         // response bad request
         return res.status(400).json({
           code: 400,
@@ -117,7 +116,7 @@ module.exports = {
           tujuan: req.body.tujuan,
           perihal: req.body.perihal,
           keterangan: req.body.keterangan,
-          document: req.file.path,
+          document: req.files.document[0].path,
         });
         // response berhasil
         res.status(201).json({
@@ -131,7 +130,7 @@ module.exports = {
       res.status(500).json({
         code: 500,
         status: "Terjadi kesalahan pada server",
-        message: err,
+        message: err.message,
       });
     }
   },
@@ -157,7 +156,7 @@ module.exports = {
         });
       } else {
         // cek apakah mengubah document
-        if (!req.file) {
+        if (!req.files.document) {
           // jika tidak mengubah document
 
           // update ke database
@@ -200,7 +199,7 @@ module.exports = {
               tujuan: req.body.tujuan,
               perihal: req.body.perihal,
               keterangan: req.body.keterangan,
-              document: req.file.path,
+              document: req.files.document[0].path,
             },
             {
               where: {
@@ -221,7 +220,7 @@ module.exports = {
       res.status(500).json({
         code: 500,
         status: "Terjadi kesalahan pada server",
-        message: err,
+        message: err.message,
       });
     }
   },
@@ -265,7 +264,7 @@ module.exports = {
       res.status(500).json({
         code: 500,
         status: "Terjadi kesalahan pada server",
-        message: err,
+        message: err.message,
       });
     }
   },

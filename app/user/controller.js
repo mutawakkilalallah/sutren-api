@@ -23,32 +23,33 @@ module.exports = {
           status: "CONFLICT",
           message: "username sudah ada",
         });
-      }
-      // cek gambar
-      if (!req.file) {
-        // jika tidak ada gambar
+      } else {
+        // cek gambar
+        if (!req.files.picture) {
+          // jika tidak ada gambar
 
-        // response bad request
-        return res.status(400).json({
-          code: 400,
-          status: "BAD REQUEST",
-          message: "gambar harus disertakan dengan format png, jpeg atau jpg",
+          // response bad request
+          return res.status(400).json({
+            code: 400,
+            status: "BAD REQUEST",
+            message: "gambar harus disertakan dengan format png, jpeg atau jpg",
+          });
+        }
+        // hashing password
+        const password = await bcrypt.hash(req.body.password, 10);
+        // menambahkan user ke database
+        await User.create({
+          nama: req.body.nama,
+          username: req.body.username,
+          password: password,
+          akses: req.body.akses,
+          picture: req.files.picture[0].path,
+        });
+        // response berhasil
+        res.status(201).json({
+          message: "berhasil menambahkan user",
         });
       }
-      // hashing password
-      const password = await bcrypt.hash(req.body.password, 10);
-      // menambahkan user ke database
-      await User.create({
-        nama: req.body.nama,
-        username: req.body.username,
-        password: password,
-        akses: req.body.akses,
-        picture: req.file.path,
-      });
-      // response berhasil
-      res.status(201).json({
-        message: "berhasil menambahkan user",
-      });
     } catch (err) {
       // jika gagal menambahkan user
 
@@ -56,7 +57,7 @@ module.exports = {
       res.status(500).json({
         code: 500,
         status: "Terjadi kesalahan pada server",
-        message: err,
+        message: err.message,
       });
     }
   },

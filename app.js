@@ -6,9 +6,10 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
 
-const { documentStorage, documentFilter } = require("./helper/multer");
+const { uploadStorage, uploadFilter } = require("./helper/multer");
 const suratRouter = require("./app/surat-masuk/router");
 const userRouter = require("./app/user/router");
+const authentication = require("./middlewares/authentication");
 
 // morgan
 app.use(morgan("dev"));
@@ -18,9 +19,15 @@ app.use("/upload", express.static(path.join(__dirname, "upload")));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // multer
-app.use(multer({ storage: documentStorage }).single("document"));
+app.use(
+  multer({ storage: uploadStorage, fileFilter: uploadFilter }).fields([
+    { name: "document", maxCount: 1 },
+    { name: "picture", maxCount: 1 },
+  ])
+);
+
 // routing surat masuk
-app.use("/api/surat-masuk/", suratRouter);
+app.use("/api/surat-masuk/", authentication, suratRouter);
 // routing user
 app.use("/api/user/", userRouter);
 
