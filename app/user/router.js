@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { create, login } = require("./controller");
+const { create, login, update } = require("./controller");
 const validationCreate = require("../../validation/user-validation-create");
 const validationLogin = require("../../validation/user-validation-login");
+const validationUpdate = require("../../validation/user-validation-update");
 const authentication = require("../../middlewares/authentication");
 const { sysadmin } = require("../../middlewares/authorization");
 
@@ -10,5 +11,7 @@ const { sysadmin } = require("../../middlewares/authorization");
 router.post("/register", authentication, sysadmin, validationCreate, create);
 // routing login user
 router.post("/login", validationLogin, login);
+// routing daftar user
+router.put("/edit/:uuid", authentication, sysadmin, validationUpdate, update);
 
 module.exports = router;

@@ -3,6 +3,7 @@ const { User } = require("../../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { JWT_SECRET_KEY } = process.env;
+const fs = require("fs");
 
 module.exports = {
   // menambahkan user baru
@@ -109,6 +110,125 @@ module.exports = {
         });
     } catch (err) {
       // jika gagal login
+
+      // response server error
+      res.status(500).json({
+        code: 500,
+        status: "Terjadi kesalahan pada ini",
+        message: err.message,
+      });
+    }
+  },
+  update: async (req, res) => {
+    try {
+      // jika berhasil edit user
+
+      // mengambil parameter uuid
+      const uuid = req.params.uuid;
+      // cek user di database
+      const data = await User.findOne({
+        where: {
+          uuid: uuid,
+        },
+      });
+      // cek hasil data di database
+      if (data < 1) {
+        // jika tidak ada data user
+        res.status(200).json({
+          message: "user tidak ditemukan",
+        });
+      } else {
+        // cek apakah mengubah gambar
+        if (!req.files.picture) {
+          // jika tidak mengubah gambar
+
+          // hashing password
+          const password = await bcrypt.hash(req.body.password, 10);
+          // update ke database
+          await User.update(
+            {
+              nama: req.body.nama,
+              password: password,
+            },
+            {
+              where: {
+                uuid: uuid,
+              },
+            }
+          );
+        } else {
+          // jika mengubah gambar
+
+          // menghapus gambar yang lama
+          fs.unlinkSync(data.picture);
+
+          // hashing password
+          const password = await bcrypt.hash(req.body.password, 10);
+          // update ke database
+          await User.update(
+            {
+              nama: req.body.nama,
+              password: password,
+              picture: req.files.picture[0].path,
+            },
+            {
+              where: {
+                uuid: uuid,
+              },
+            }
+          );
+        }
+        // response berhasil
+        res.status(201).json({
+          message: "berhasil mengubah user",
+        });
+      }
+    } catch (err) {
+      // jika gagal mengubah data user
+
+      // response server error
+      res.status(500).json({
+        code: 500,
+        status: "Terjadi kesalahan pada server",
+        message: err.message,
+      });
+    }
+  },
+
+  // menghapus data surat
+  destroy: async (req, res) => {
+    try {
+      // jika berhasil menghapus data surat
+
+      // mengambil parameter uuid
+      const uuid = req.params.uuid;
+      // menghapus document yang lama
+      const data = await SuratMasuk.findOne({
+        where: {
+          uuid: uuid,
+        },
+      });
+      if (data < 1) {
+        // jika tidak ada data surat
+        res.status(200).json({
+          message: "Surat tidak ditemukan",
+        });
+      } else {
+        // jika ada data surat
+        fs.unlinkSync(data.document);
+        // Delete dari database
+        await SuratMasuk.destroy({
+          where: {
+            uuid: uuid,
+          },
+        });
+        // response berhasil
+        res.status(200).json({
+          message: "berhasil menghapus surat",
+        });
+      }
+    } catch (err) {
+      // jika gagal edit user
 
       // response server error
       res.status(500).json({
