@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
+const cors = require("cors");
 
 const { uploadStorage, uploadFilter } = require("./helper/multer");
 const suratRouter = require("./app/surat-masuk/router");
@@ -13,6 +14,13 @@ const authentication = require("./middlewares/authentication");
 
 // morgan
 app.use(morgan("dev"));
+// cors
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  })
+);
 // public directory
 app.use("/upload", express.static(path.join(__dirname, "upload")));
 // konfigurasi body parser
