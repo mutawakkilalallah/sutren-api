@@ -1,4 +1,5 @@
 const { SuratMasuk } = require("../../models");
+const { Op } = require("sequelize");
 const fs = require("fs");
 
 module.exports = {
@@ -6,36 +7,83 @@ module.exports = {
   index: async (req, res) => {
     try {
       // mengambil query parameter
+      const search = req.query.search;
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 3;
       const offset = 0 + (page - 1) * limit;
       // jika berhasil mengambil semua data surat masuk
-      const data = await SuratMasuk.findAndCountAll({
-        order: [["createdAt", "DESC"]],
-        limit: limit,
-        offset: offset,
-      });
-      const totalData = data.count;
-      const totalPage = Math.ceil(totalData / limit);
 
-      if (totalData < 1) {
-        // jika tidak ada semua surat masuk
+      // jika tidak ada pencarian
+      if (!search) {
+        const data = await SuratMasuk.findAndCountAll({
+          order: [["createdAt", "DESC"]],
+          limit: limit,
+          offset: offset,
+        });
+        const totalData = data.count;
+        const totalPage = Math.ceil(totalData / limit);
 
-        // response array kosong
-        empetyData = [];
-        res.status(200).json(empetyData);
+        if (totalData < 1) {
+          // jika tidak ada semua surat masuk
+
+          // response array kosong
+          empetyData = [];
+          res.status(200).json(empetyData);
+        } else {
+          // jika ada semua surat  masuk
+
+          // response berhasil
+          res
+            .status(200)
+            .set({
+              "x-data-total": totalData,
+              "x-pagination-data-limit": limit,
+              "x-pagination-total-page": totalPage,
+            })
+            .json(data.rows);
+        }
       } else {
-        // jika ada semua surat  masuk
+        const data = await SuratMasuk.findAndCountAll({
+          where: {
+            [Op.or]: [
+              {
+                asal: {
+                  [Op.like]: "%" + search + "%",
+                },
+              },
+              {
+                tujuan: {
+                  [Op.like]: "%" + search + "%",
+                },
+              },
+            ],
+          },
+          order: [["createdAt", "DESC"]],
+          limit: limit,
+          offset: offset,
+        });
+        const totalData = data.count;
+        const totalPage = Math.ceil(totalData / limit);
 
-        // response berhasil
-        res
-          .status(200)
-          .set({
-            "x-data-total": totalData,
-            "x-pagination-data-limit": limit,
-            "x-pagination-total-page": totalPage,
-          })
-          .json(data.rows);
+        if (totalData < 1) {
+          // jika tidak ada semua surat masuk
+
+          // response array kosong
+          empetyData = [];
+          res.status(200).json(empetyData);
+        } else {
+          // jika ada semua surat  masuk
+
+          // response berhasil
+          res
+            .status(200)
+            .set({
+              "x-data-total": totalData,
+              "x-pagination-data-limit": limit,
+              "x-pagination-total-page": totalPage,
+            })
+            .json(data.rows);
+        }
       }
     } catch (err) {
       // jika gagal mengambil semua data surat  masuk
