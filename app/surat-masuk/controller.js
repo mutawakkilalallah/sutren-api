@@ -1,4 +1,4 @@
-const { SuratMasuk } = require("../../models");
+const { SuratMasuk, User } = require("../../models");
 const { Op } = require("sequelize");
 const fs = require("fs");
 
@@ -7,7 +7,7 @@ module.exports = {
   index: async (req, res) => {
     try {
       // mengambil query parameter
-      const search = req.query.search;
+      const search = req.query.cari;
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 3;
       const offset = 0 + (page - 1) * limit;
@@ -165,6 +165,8 @@ module.exports = {
           perihal: req.body.perihal,
           keterangan: req.body.keterangan,
           document: req.files.document[0].path,
+          createdBy: req.uuid,
+          updatedBy: req.uuid,
         });
         // response berhasil
         res.status(201).json({
@@ -221,6 +223,7 @@ module.exports = {
               tujuan: req.body.tujuan,
               perihal: req.body.perihal,
               keterangan: req.body.keterangan,
+              updatedBy: req.uuid,
             },
             {
               where: {
@@ -248,6 +251,7 @@ module.exports = {
               perihal: req.body.perihal,
               keterangan: req.body.keterangan,
               document: req.files.document[0].path,
+              updatedBy: req.uuid,
             },
             {
               where: {

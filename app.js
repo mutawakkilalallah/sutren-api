@@ -19,7 +19,8 @@ app.use(
   cors({
     origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    exposedHeaders: "X-Data-Total, X-Pagination-Data-Limit, X-Pagination-Total-Page"
+    exposedHeaders:
+      "X-Data-Total, X-Pagination-Data-Limit, X-Pagination-Total-Page",
   })
 );
 // public directory
@@ -36,7 +37,7 @@ app.use(
 );
 
 // routing surat masuk
-app.use("/api/surat-masuk/", suratRouter);
+app.use("/api/surat-masuk/", authentication, suratRouter);
 // routing user
 app.use("/api/user/", userRouter);
 

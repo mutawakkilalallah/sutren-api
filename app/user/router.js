@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { create, login, update } = require("./controller");
+const { create, login, update, detail } = require("./controller");
 const validationCreate = require("../../validation/user-validation-create");
 const validationLogin = require("../../validation/user-validation-login");
 const validationUpdate = require("../../validation/user-validation-update");
@@ -13,5 +13,7 @@ router.post("/register", authentication, sysadmin, validationCreate, create);
 router.post("/login", validationLogin, login);
 // routing daftar user
 router.put("/edit/:uuid", authentication, sysadmin, validationUpdate, update);
+// routing detail user
+router.get("/detail/:uuid", authentication, sysadmin, detail);
 
 module.exports = router;

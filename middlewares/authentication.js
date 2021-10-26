@@ -4,7 +4,7 @@ const { JWT_SECRET_KEY } = process.env;
 
 module.exports = async (req, res, next) => {
   // mengambil data token
-  const jwtToken = req.headers.authorization;
+  const jwtToken = req.headers["x-sutren-token"];
   //   verivikasi jwt token
   jwt.verify(jwtToken, JWT_SECRET_KEY, function (err, decoded) {
     // validasi token

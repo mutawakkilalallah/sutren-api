@@ -238,4 +238,41 @@ module.exports = {
       });
     }
   },
+
+  // mengambil data surat berdasarkan uuid
+  detail: async (req, res) => {
+    // mengambil parameter uuid
+    const uuid = req.params.uuid;
+    // mengambil data surat berdasarkan uuid
+    try {
+      // jika berhasil mengambil data surat
+      const data = await User.findOne({
+        where: {
+          uuid: uuid,
+        },
+      });
+      if (data < 1) {
+        // jika tidak ada data surat
+
+        // response not found
+        res.status(404).json({
+          message: "User tidak ditemukan",
+        });
+      } else {
+        // jika ada data surat
+
+        // response berhasil
+        res.status(200).json(data);
+      }
+    } catch (err) {
+      // jika gagal mengambil data surat
+
+      // response server error
+      res.status(500).json({
+        code: 500,
+        status: "Terjadi kesalahan pada server",
+        message: err.message,
+      });
+    }
+  },
 };
