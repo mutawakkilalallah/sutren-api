@@ -14,6 +14,6 @@ router.post("/login", validationLogin, login);
 // routing daftar user
 router.put("/edit/:uuid", authentication, sysadmin, validationUpdate, update);
 // routing detail user
-router.get("/detail/:uuid", authentication, sysadmin, detail);
+router.get("/detail/:uuid", authentication, detail);
 
 module.exports = router;
