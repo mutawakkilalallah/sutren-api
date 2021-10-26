@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { create, login, update, detail } = require("./controller");
+const { create, login, update, detail, destroy } = require("./controller");
 const validationCreate = require("../../validation/user-validation-create");
 const validationLogin = require("../../validation/user-validation-login");
 const validationUpdate = require("../../validation/user-validation-update");
@@ -15,5 +15,7 @@ router.post("/login", validationLogin, login);
 router.put("/edit/:uuid", authentication, sysadmin, validationUpdate, update);
 // routing detail user
 router.get("/detail/:uuid", authentication, detail);
+// routing delete user
+router.delete("/delete/:uuid", authentication, sysadmin, destroy);
 
 module.exports = router;

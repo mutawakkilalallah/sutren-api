@@ -195,36 +195,36 @@ module.exports = {
     }
   },
 
-  // menghapus data surat
+  // menghapus data user
   destroy: async (req, res) => {
     try {
-      // jika berhasil menghapus data surat
+      // jika berhasil menghapus data user
 
       // mengambil parameter uuid
       const uuid = req.params.uuid;
-      // menghapus document yang lama
-      const data = await SuratMasuk.findOne({
+      // menghapus picture yang lama
+      const data = await User.findOne({
         where: {
           uuid: uuid,
         },
       });
       if (data < 1) {
-        // jika tidak ada data surat
+        // jika tidak ada data user
         res.status(200).json({
-          message: "Surat tidak ditemukan",
+          message: "User tidak ditemukan",
         });
       } else {
-        // jika ada data surat
-        fs.unlinkSync(data.document);
+        // jika ada data user
+        fs.unlinkSync(data.picture);
         // Delete dari database
-        await SuratMasuk.destroy({
+        await User.destroy({
           where: {
             uuid: uuid,
           },
         });
         // response berhasil
         res.status(200).json({
-          message: "berhasil menghapus surat",
+          message: "berhasil menghapus user",
         });
       }
     } catch (err) {
@@ -239,33 +239,33 @@ module.exports = {
     }
   },
 
-  // mengambil data surat berdasarkan uuid
+  // mengambil data user berdasarkan uuid
   detail: async (req, res) => {
     // mengambil parameter uuid
     const uuid = req.params.uuid;
-    // mengambil data surat berdasarkan uuid
+    // mengambil data user berdasarkan uuid
     try {
-      // jika berhasil mengambil data surat
+      // jika berhasil mengambil data user
       const data = await User.findOne({
         where: {
           uuid: uuid,
         },
       });
       if (data < 1) {
-        // jika tidak ada data surat
+        // jika tidak ada data user
 
         // response not found
         res.status(404).json({
           message: "User tidak ditemukan",
         });
       } else {
-        // jika ada data surat
+        // jika ada data user
 
         // response berhasil
         res.status(200).json(data);
       }
     } catch (err) {
-      // jika gagal mengambil data surat
+      // jika gagal mengambil data user
 
       // response server error
       res.status(500).json({
