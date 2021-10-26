@@ -20,9 +20,9 @@ module.exports = {
       // cek username apakah ada
       if (user) {
         res.status(409).json({
-          code: 409,
-          status: "CONFLICT",
-          message: "username sudah ada",
+          statusCode: 403,
+          error: "FORBIDDEN",
+          message: "username sudah terdaftar",
         });
       } else {
         // cek gambar
@@ -31,8 +31,8 @@ module.exports = {
 
           // response bad request
           return res.status(400).json({
-            code: 400,
-            status: "BAD REQUEST",
+            statusCode: 400,
+            error: "BAD REQUEST",
             message: "gambar harus disertakan dengan format png, jpeg atau jpg",
           });
         }
@@ -56,9 +56,9 @@ module.exports = {
 
       // response server error
       res.status(500).json({
-        code: 500,
-        status: "Terjadi kesalahan pada server",
-        message: err.message,
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
       });
     }
   },
@@ -113,9 +113,9 @@ module.exports = {
 
       // response server error
       res.status(500).json({
-        code: 500,
-        status: "Terjadi kesalahan pada ini",
-        message: err.message,
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
       });
     }
   },
@@ -134,7 +134,9 @@ module.exports = {
       // cek hasil data di database
       if (data < 1) {
         // jika tidak ada data user
-        res.status(200).json({
+        res.status(404).json({
+          statusCode: 404,
+          error: "NOT FOUND",
           message: "user tidak ditemukan",
         });
       } else {
@@ -188,9 +190,9 @@ module.exports = {
 
       // response server error
       res.status(500).json({
-        code: 500,
-        status: "Terjadi kesalahan pada server",
-        message: err.message,
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
       });
     }
   },
@@ -210,8 +212,10 @@ module.exports = {
       });
       if (data < 1) {
         // jika tidak ada data user
-        res.status(200).json({
-          message: "User tidak ditemukan",
+        res.status(404).json({
+          statusCode: 404,
+          error: "NOT FOUND",
+          message: "user tidak ditemukan",
         });
       } else {
         // jika ada data user
@@ -232,9 +236,9 @@ module.exports = {
 
       // response server error
       res.status(500).json({
-        code: 500,
-        status: "Terjadi kesalahan pada ini",
-        message: err.message,
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
       });
     }
   },
@@ -254,9 +258,10 @@ module.exports = {
       if (data < 1) {
         // jika tidak ada data user
 
-        // response not found
         res.status(404).json({
-          message: "User tidak ditemukan",
+          statusCode: 404,
+          error: "NOT FOUND",
+          message: "user tidak ditemukan",
         });
       } else {
         // jika ada data user
@@ -269,9 +274,9 @@ module.exports = {
 
       // response server error
       res.status(500).json({
-        code: 500,
-        status: "Terjadi kesalahan pada server",
-        message: err.message,
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
       });
     }
   },

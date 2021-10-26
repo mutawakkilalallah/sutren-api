@@ -89,13 +89,11 @@ module.exports = {
       // jika gagal mengambil semua data surat  masuk
 
       // response server error
-      const erornya = {
-        code: 500,
+      res.status(500).json({
+        statusCode: 500,
+        error: err.message,
         message: "Terjadi kesalahan Pada server",
-        status: err.message,
-      };
-      // response server error
-      res.status(500).json(erornya);
+      });
     }
   },
 
@@ -116,7 +114,9 @@ module.exports = {
 
         // response not found
         res.status(404).json({
-          message: "Surat tidak ditemukan",
+          statusCode: 404,
+          error: "NOT FOUND",
+          message: "surat tidak ditemukan",
         });
       } else {
         // jika ada data surat
@@ -129,9 +129,9 @@ module.exports = {
 
       // response server error
       res.status(500).json({
-        code: 500,
-        status: "Terjadi kesalahan pada server",
-        message: err,
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
       });
     }
   },
@@ -180,9 +180,9 @@ module.exports = {
 
       // response server error
       res.status(500).json({
-        code: 500,
-        status: "Terjadi kesalahan pada server",
-        message: err.message,
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
       });
     }
   },
@@ -202,9 +202,11 @@ module.exports = {
       });
       // cek hasil data di database
       if (data < 1) {
-        // jika tidak ada data surat
-        res.status(200).json({
-          message: "Surat tidak ditemukan",
+        // response not found
+        res.status(404).json({
+          statusCode: 404,
+          error: "NOT FOUND",
+          message: "surat tidak ditemukan",
         });
       } else {
         // cek apakah mengubah document
@@ -272,9 +274,9 @@ module.exports = {
 
       // response server error
       res.status(500).json({
-        code: 500,
-        status: "Terjadi kesalahan pada server",
-        message: err.message,
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
       });
     }
   },
@@ -294,8 +296,11 @@ module.exports = {
       });
       if (data < 1) {
         // jika tidak ada data surat
-        res.status(200).json({
-          message: "Surat tidak ditemukan",
+        // response not found
+        res.status(404).json({
+          statusCode: 404,
+          error: "NOT FOUND",
+          message: "surat tidak ditemukan",
         });
       } else {
         // jika ada data surat
@@ -316,9 +321,9 @@ module.exports = {
 
       // response server error
       res.status(500).json({
-        code: 500,
-        status: "Terjadi kesalahan pada server",
-        message: err.message,
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
       });
     }
   },
