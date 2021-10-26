@@ -20,7 +20,7 @@ app.use(
     origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     exposedHeaders:
-      "X-Data-Total, X-Pagination-Data-Limit, X-Pagination-Total-Page",
+      "X-Data-Total, X-Pagination-Data-Limit, X-Pagination-Total-Page, X-Sutren-Token",
   })
 );
 // public directory

@@ -89,11 +89,13 @@ module.exports = {
       // jika gagal mengambil semua data surat  masuk
 
       // response server error
-      res.status(500).json({
+      const erornya = {
         code: 500,
-        status: "Terjadi kesalahan pada server",
-        message: err.message,
-      });
+        message: "Terjadi kesalahan Pada server",
+        status: err.message,
+      };
+      // response server error
+      res.status(500).json(erornya);
     }
   },
 
