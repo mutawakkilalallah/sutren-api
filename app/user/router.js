@@ -15,7 +15,7 @@ const authentication = require("../../middlewares/authentication");
 const { sysadmin } = require("../../middlewares/authorization");
 
 // routing semua data user
-router.get("/", authentication, sysadmin, validationCreate, index);
+router.get("/", authentication, sysadmin, index);
 // routing daftar user
 router.post("/register", authentication, sysadmin, validationCreate, create);
 // routing login user
