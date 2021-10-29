@@ -325,12 +325,12 @@ module.exports = {
           where: {
             [Op.or]: [
               {
-                asal: {
+                username: {
                   [Op.like]: "%" + search + "%",
                 },
               },
               {
-                tujuan: {
+                nama: {
                   [Op.like]: "%" + search + "%",
                 },
               },
