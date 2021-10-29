@@ -3,6 +3,7 @@ const { User } = require("../../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { JWT_SECRET_KEY } = process.env;
+const { Op } = require("sequelize");
 const fs = require("fs");
 
 module.exports = {
