@@ -280,4 +280,98 @@ module.exports = {
       });
     }
   },
+
+  // mengambil semua data user
+  index: async (req, res) => {
+    try {
+      // mengambil query parameter
+      const search = req.query.cari;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 3;
+      const offset = 0 + (page - 1) * limit;
+      // jika berhasil mengambil semua data user
+
+      // jika tidak ada pencarian
+      if (!search) {
+        const data = await User.findAndCountAll({
+          order: [["createdAt", "DESC"]],
+          limit: limit,
+          offset: offset,
+        });
+        const totalData = data.count;
+        const totalPage = Math.ceil(totalData / limit);
+
+        if (totalData < 1) {
+          // jika tidak ada semua user
+
+          // response array kosong
+          empetyData = [];
+          res.status(200).json(empetyData);
+        } else {
+          // jika ada semua surat  masuk
+
+          // response berhasil
+          res
+            .status(200)
+            .set({
+              "x-data-total": totalData,
+              "x-pagination-data-limit": limit,
+              "x-pagination-total-page": totalPage,
+            })
+            .json(data.rows);
+        }
+      } else {
+        const data = await User.findAndCountAll({
+          where: {
+            [Op.or]: [
+              {
+                asal: {
+                  [Op.like]: "%" + search + "%",
+                },
+              },
+              {
+                tujuan: {
+                  [Op.like]: "%" + search + "%",
+                },
+              },
+            ],
+          },
+          order: [["createdAt", "DESC"]],
+          limit: limit,
+          offset: offset,
+        });
+        const totalData = data.count;
+        const totalPage = Math.ceil(totalData / limit);
+
+        if (totalData < 1) {
+          // jika tidak ada semua user
+
+          // response array kosong
+          empetyData = [];
+          res.status(200).json(empetyData);
+        } else {
+          // jika ada semua surat  masuk
+
+          // response berhasil
+          res
+            .status(200)
+            .set({
+              "x-data-total": totalData,
+              "x-pagination-data-limit": limit,
+              "x-pagination-total-page": totalPage,
+            })
+            .json(data.rows);
+        }
+      }
+    } catch (err) {
+      // jika gagal mengambil semua data surat  masuk
+
+      // response server error
+      res.status(500).json({
+        statusCode: 500,
+        error: err.message,
+        message: "Terjadi kesalahan Pada server",
+      });
+    }
+  },
 };
