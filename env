@@ -1,0 +1,5 @@
+DB_HOSTNAME = localhost
+DB_USERNAME = root
+DB_PASSWORD =
+DB_NAME = db_sutren
+JWT_SECRET_KEY = sutren-api-key
