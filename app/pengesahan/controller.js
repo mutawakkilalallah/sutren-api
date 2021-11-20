@@ -30,7 +30,14 @@ module.exports = {
         // jika tidak ada data
 
         // response kosong
-        res.status(200).json([]);
+        res
+          .status(200)
+          .set({
+            "x-data-total": data.count,
+            "x-pagination-data-limit": limit,
+            "x-pagination-total-page": Math.ceil(data.count / limit),
+          })
+          .json([]);
       } else {
         // jika ada data
 
