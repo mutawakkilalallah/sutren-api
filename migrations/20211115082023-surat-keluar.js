@@ -28,10 +28,18 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      // document: {
-      //   type: Sequelize.STRING,
-      //   allowNull: false,
-      // },
+      document: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      tujuan_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      document: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

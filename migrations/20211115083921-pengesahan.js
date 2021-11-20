@@ -2,15 +2,11 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("pengesahan_surat", {
+    await queryInterface.createTable("pengesahan", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
-      },
-      uuid_surat: {
-        type: Sequelize.STRING,
         allowNull: false,
       },
       jabatan: {
@@ -29,6 +25,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("pengesahan_surat");
+    await queryInterface.dropTable("pengesahan");
   },
 };

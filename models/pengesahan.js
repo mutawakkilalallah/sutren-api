@@ -1,19 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
-  const TujuanSurat = sequelize.define(
-    "TujuanSurat",
+  const pengesahan = sequelize.define(
+    "pengesahan",
     {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
-      },
-      uuid_surat: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      jabatan: {
-        type: DataTypes.STRING,
         allowNull: false,
       },
       nama: {
@@ -24,11 +16,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      jabatan: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
-      tableName: "tujuan_surat",
+      tableName: "pengesahan",
       timestamps: false,
     }
   );
-  return TujuanSurat;
+  return pengesahan;
 };

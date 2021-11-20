@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const TujuanSurat = sequelize.define(
-    "TujuanSurat",
+  const tujuan = sequelize.define(
+    "tujuan",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -8,19 +8,16 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
-      uuid_surat: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      tujuan: {
+      nama: {
         type: DataTypes.STRING,
         allowNull: false,
       },
     },
     {
-      tableName: "tujuan_surat",
+      tableName: "tujuan",
       timestamps: false,
+      freezeTableName: true,
     }
   );
-  return TujuanSurat;
+  return tujuan;
 };

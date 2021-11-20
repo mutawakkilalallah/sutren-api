@@ -1,6 +1,24 @@
-const { SuratKeluar, TujuanSurat, PengesahanSurat } = require("../../models");
 const { Op } = require("sequelize");
 const fs = require("fs");
+
+// const { surat, tujuan, pengesahan } = require("../../models");
+
+// surat.belongsToMany(tujuan, {
+//   through: "surat_tujuan",
+//   foreignKey: "id_surat",
+// });
+// tujuan.belongsToMany(surat, {
+//   through: "surat_tujuan",
+//   foreignKey: "id_tujuan",
+// });
+// surat.belongsToMany(pengesahan, {
+//   through: "surat_pengesahan",
+//   foreignKey: "id_surat",
+// });
+// pengesahan.belongsToMany(surat, {
+//   through: "surat_pengesahan",
+//   foreignKey: "id_pengesahan",
+// });
 
 module.exports = {
   // mengambil semua data surat masuk
@@ -99,41 +117,14 @@ module.exports = {
 
   // mengambil data surat berdasarkan uuid
   detail: async (req, res) => {
-    // mengambil parameter uuid
-    const uuid = req.params.uuid;
-    // mengambil data surat berdasarkan uuid
-    try {
-      // jika berhasil mengambil data surat
-      const data = await SuratMasuk.findOne({
-        where: {
-          uuid: uuid,
-        },
-      });
-      if (data < 1) {
-        // jika tidak ada data surat
+    // const data = await surat.findOne({
+    //   include: [tujuan, pengesahan],
+    //   where: {
+    //     id: 1,
+    //   },
+    // });
 
-        // response not found
-        res.status(404).json({
-          statusCode: 404,
-          error: "NOT FOUND",
-          message: "surat tidak ditemukan",
-        });
-      } else {
-        // jika ada data surat
-
-        // response berhasil
-        res.status(200).json(data);
-      }
-    } catch (err) {
-      // jika gagal mengambil data surat
-
-      // response server error
-      res.status(500).json({
-        statusCode: 500,
-        error: err.message,
-        message: "Terjadi kesalahan Pada server",
-      });
-    }
+    res.json(data);
   },
 
   // menambahkan data surat
@@ -148,9 +139,8 @@ module.exports = {
         perihal: req.body.perihal,
         isi: req.body.isi,
         tanggal_surat: req.body.tanggal_surat,
-        // document: req.files.document[0].path,
-        createdBy: "326c9c74-0017-4eea-b1d9-13fe864b64d0",
-        updatedBy: "326c9c74-0017-4eea-b1d9-13fe864b64d0",
+        createdBy: "req.uuid",
+        updatedBy: "req.uuid",
       });
 
       // response berhasil
