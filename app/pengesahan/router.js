@@ -3,19 +3,19 @@ const { index, detail, create, edit, destroy } = require("./controller");
 const router = express.Router();
 const { sysadmin } = require("../../middlewares/authorization");
 
-// get all tujuan
+// get all pengesahan
 router.get("/", sysadmin, index);
 
-// get tujuan
+// get pengesahan
 router.get("/:id", sysadmin, detail);
 
-// get tujuan
+// get pengesahan
 router.post("/", sysadmin, create);
 
-// delete tujuan
+// delete pengesahan
 router.put("/:id", sysadmin, edit);
 
-// delete tujuan
+// delete pengesahan
 router.delete("/:id", sysadmin, destroy);
 
 module.exports = router;

@@ -1,9 +1,9 @@
 const { Op } = require("sequelize");
-const { tujuan } = require("../../models");
-const validation = require("../../validation/tujuan");
+const { pengesahan } = require("../../models");
+const validation = require("../../validation/pengesahan");
 
 module.exports = {
-  // get all tujuan
+  // get all pengesahan
   index: async (req, res) => {
     try {
       // jika berhasil
@@ -15,7 +15,7 @@ module.exports = {
       const offset = 0 + (page - 1) * limit;
 
       // mengambil data ke database
-      const data = await tujuan.findAndCountAll({
+      const data = await pengesahan.findAndCountAll({
         where: {
           nama: {
             [Op.like]: "%" + search + "%",
@@ -56,13 +56,13 @@ module.exports = {
     }
   },
 
-  // get detail tujuan
+  // get detail pengesahan
   detail: async (req, res) => {
     try {
       // jika berhasil
 
       // mengambil data ke database
-      const data = await tujuan.findOne({
+      const data = await pengesahan.findOne({
         where: {
           id: req.params.id,
         },
@@ -76,7 +76,7 @@ module.exports = {
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
-          message: "Tujuan tidak ditemukan",
+          message: "Pengesahan tidak ditemukan",
         });
       } else {
         // jika ada data
@@ -96,7 +96,7 @@ module.exports = {
     }
   },
 
-  // create tujuan
+  // create pengesahan
   create: async (req, res) => {
     try {
       // jika berhasil
@@ -116,11 +116,11 @@ module.exports = {
         // jika berhasil
 
         // insert data ke database
-        await tujuan.create(value);
+        await pengesahan.create(value);
 
         // response berhasil
         res.status(200).json({
-          message: "Berhasil menambahkan tujuan",
+          message: "Berhasil menambahkan pengesahan",
         });
       }
     } catch (err) {
@@ -135,13 +135,13 @@ module.exports = {
     }
   },
 
-  // edit tujuan
+  // edit pengesahan
   edit: async (req, res) => {
     try {
       // jika berhasil
 
       // mengambil data ke database
-      const data = await tujuan.findOne({
+      const data = await pengesahan.findOne({
         where: {
           id: req.params.id,
         },
@@ -155,7 +155,7 @@ module.exports = {
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
-          message: "Tujuan tidak ditemukan",
+          message: "Pengesahan tidak ditemukan",
         });
       } else {
         // jika ada data
@@ -179,7 +179,7 @@ module.exports = {
 
           // response berhasil
           res.status(201).json({
-            message: "Berhasil mengubah tujuan",
+            message: "Berhasil mengubah pengesahan",
           });
         }
       }
@@ -195,13 +195,13 @@ module.exports = {
     }
   },
 
-  // delete tujuan
+  // delete pengesahan
   destroy: async (req, res) => {
     try {
       // jika berhasil
 
       // mengambil data ke database
-      const data = await tujuan.findOne({
+      const data = await pengesahan.findOne({
         where: {
           id: req.params.id,
         },
@@ -215,7 +215,7 @@ module.exports = {
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
-          message: "Tujuan tidak ditemukan",
+          message: "Pengesahan tidak ditemukan",
         });
       } else {
         // jika ada data
@@ -225,7 +225,7 @@ module.exports = {
 
         // response berhasil
         res.status(201).json({
-          message: "Berhasil menghapus tujuan",
+          message: "Berhasil menghapus pengesahan",
         });
       }
     } catch (err) {
