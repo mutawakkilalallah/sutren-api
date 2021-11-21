@@ -1,18 +1,21 @@
 const express = require("express");
+const { index, create, detail, destroy, edit } = require("./controller");
 const router = express.Router();
-// const validationCreate = require("../../validation/surat-masuk-validation-create");
-// const { admin } = require("../../middlewares/authorization");
-const { create, detail } = require("./controller");
+const { admin } = require("../../middlewares/authorization");
 
 // routing data semua surat
-// router.get("/", index);
+router.get("/", admin, index);
+
 // routing data surat
-router.get("/:id", detail);
+router.get("/:uuid", admin, detail);
+
 // routing tambah surat
-router.post("/", create);
+router.post("/", admin, create);
+
 // routing edit surat
-// router.put("/:uuid", admin, update);
+router.put("/:uuid", edit);
+
 // routing delete surat
-// router.delete("/:uuid", admin, destroy);
+router.delete("/:uuid", admin, destroy);
 
 module.exports = router;

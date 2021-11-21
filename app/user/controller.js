@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { User } = require("../../models");
+const { user } = require("../../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { JWT_SECRET_KEY } = process.env;
@@ -13,7 +13,7 @@ module.exports = {
       // jika berhasil menambahkan user
 
       // cek user sesuai username
-      const user = await User.findOne({
+      const user = await user.findOne({
         where: {
           username: req.body.username,
         },
@@ -40,7 +40,7 @@ module.exports = {
         // hashing password
         const password = await bcrypt.hash(req.body.password, 10);
         // menambahkan user ke database
-        await User.create({
+        await user.create({
           nama: req.body.nama,
           username: req.body.username,
           password: password,
@@ -74,13 +74,13 @@ module.exports = {
       password = req.body.password;
 
       // cek apakah ada user
-      const user = await User.findOne({
+      const User = await user.findOne({
         where: {
           username: username,
         },
       });
       // jika username salah
-      if (!user) {
+      if (!User) {
         res.status(404).json({
           code: 404,
           status: "NOT FOUND",
@@ -88,7 +88,7 @@ module.exports = {
         });
       }
       // jika password salah
-      const validPassword = await bcrypt.compare(password, user.password);
+      const validPassword = await bcrypt.compare(password, User.password);
       if (!validPassword) {
         res.status(404).json({
           code: 404,
@@ -97,7 +97,7 @@ module.exports = {
         });
       }
       // generate jwt token
-      const token = await jwt.sign({ uuid: user.uuid }, JWT_SECRET_KEY, {
+      const token = await jwt.sign({ uuid: User.uuid }, JWT_SECRET_KEY, {
         expiresIn: "1h",
       });
       // response berhasil
@@ -127,7 +127,7 @@ module.exports = {
       // mengambil parameter uuid
       const uuid = req.params.uuid;
       // cek user di database
-      const data = await User.findOne({
+      const data = await user.findOne({
         where: {
           uuid: uuid,
         },
@@ -148,7 +148,7 @@ module.exports = {
           // hashing password
           const password = await bcrypt.hash(req.body.password, 10);
           // update ke database
-          await User.update(
+          await user.update(
             {
               nama: req.body.nama,
               password: password,
@@ -168,7 +168,7 @@ module.exports = {
           // hashing password
           const password = await bcrypt.hash(req.body.password, 10);
           // update ke database
-          await User.update(
+          await user.update(
             {
               nama: req.body.nama,
               password: password,
@@ -206,7 +206,7 @@ module.exports = {
       // mengambil parameter uuid
       const uuid = req.params.uuid;
       // menghapus picture yang lama
-      const data = await User.findOne({
+      const data = await user.findOne({
         where: {
           uuid: uuid,
         },
@@ -222,7 +222,7 @@ module.exports = {
         // jika ada data user
         fs.unlinkSync(data.picture);
         // Delete dari database
-        await User.destroy({
+        await user.destroy({
           where: {
             uuid: uuid,
           },
@@ -251,7 +251,7 @@ module.exports = {
     // mengambil data user berdasarkan uuid
     try {
       // jika berhasil mengambil data user
-      const data = await User.findOne({
+      const data = await user.findOne({
         where: {
           uuid: uuid,
         },
@@ -294,7 +294,7 @@ module.exports = {
 
       // jika tidak ada pencarian
       if (!search) {
-        const data = await User.findAndCountAll({
+        const data = await user.findAndCountAll({
           order: [["createdAt", "DESC"]],
           limit: limit,
           offset: offset,
@@ -322,7 +322,7 @@ module.exports = {
             .json(data.rows);
         }
       } else {
-        const data = await User.findAndCountAll({
+        const data = await user.findAndCountAll({
           where: {
             [Op.or]: [
               {

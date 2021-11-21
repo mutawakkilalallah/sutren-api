@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  const SuratKeluar = sequelize.define(
-    "SuratKeluar",
+  const surat_keluar = sequelize.define(
+    "surat_keluar",
     {
       uuid: {
         type: DataTypes.UUIDV4,
@@ -29,10 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      // document: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false,
-      // },
+      document: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       createdAt: {
         field: "createdAt",
         type: DataTypes.DATE,
@@ -57,5 +57,5 @@ module.exports = (sequelize, DataTypes) => {
       timestamp: true,
     }
   );
-  return SuratKeluar;
+  return surat_keluar;
 };
