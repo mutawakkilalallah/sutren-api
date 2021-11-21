@@ -10,7 +10,7 @@ module.exports = {
         allowNull: false,
       },
       id_surat: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       id_tujuan: {
