@@ -245,7 +245,7 @@ module.exports = {
         const dataTujuan = value.tujuan.map((tj) => {
           return {
             id_surat: data.uuid,
-            id_tujuan: tj.id_tujuan,
+            id_tujuan: tj,
           };
         });
 
@@ -255,7 +255,7 @@ module.exports = {
         const dataPengesahan = value.pengesahan.map((tj) => {
           return {
             id_surat: data.uuid,
-            id_pengesahan: tj.id_pengesahan,
+            id_pengesahan: tj,
           };
         });
 
@@ -278,94 +278,108 @@ module.exports = {
     }
   },
 
-  // edit surat keluar
-  // edit: async (req, res) => {
-  //   try {
-  //     // jika berhasil
+  // update surat keluar
+  edit: async (req, res) => {
+    try {
+      // jika berhasil
 
-  //     // mengambil data ke database
-  //     const data = await surat_keluar.findOne({
-  //       where: {
-  //         uuid: req.params.uuid,
-  //       },
-  //     });
+      // mengambil data ke database
+      const data = await surat_keluar.findOne({
+        where: {
+          uuid: req.params.uuid,
+        },
+      });
 
-  //     // cek apakah ada data
-  //     if (!data) {
-  //       // jika tidak ada data
+      // cek apakah ada data
+      if (!data) {
+        // jika tidak ada data
 
-  //       // response kosong
-  //       res.status(404).json({
-  //         statusCode: 404,
-  //         error: "NOT FOUND",
-  //         message: "Surat tidak ditemukan",
-  //       });
-  //     } else {
-  //       // jika ada data
+        // response kosong
+        res.status(404).json({
+          statusCode: 404,
+          error: "NOT FOUND",
+          message: "Tujuan tidak ditemukan",
+        });
+      } else {
+        // jika ada data
 
-  //       // cek hasil validasi
-  //       const { error, value } = validation.edit.validate(req.body);
-  //       console.log(value);
-  //       if (error) {
-  //         // jika terjadi error
+        // cek hasil validasi
+        const { error, value } = validation.edit.validate(req.body);
+        if (error) {
+          // jika terjadi error
 
-  //         // respon bad request
-  //         res.status(400).json({
-  //           statusCode: 400,
-  //           err: "BAD REQUEST",
-  //           message: error.message,
-  //         });
-  //       } else {
-  //         // jika berhasil
+          // respon bad request
+          res.status(400).json({
+            statusCode: 400,
+            err: "BAD REQUEST",
+            message: error.message,
+          });
+        } else {
+          // jika berhasil
 
-  //         // insert data ke database
-  //         const data = await surat_keluar.create({
-  //           nomer_surat: value.nomer_surat,
-  //           lampiran: value.lampiran,
-  //           perihal: value.perihal,
-  //           isi: value.isi,
-  //           tanggal_surat: value.tanggal_surat,
-  //           createdBy: req.uuid,
-  //           updatedBy: req.uuid,
-  //         });
+          // cek apakah update document
+          if (!req.files.document) {
+            // jika tidak ada document
 
-  //         // mapping dan insert tujuan
-  //         const dataTujuan = value.tujuan.map((tj) => {
-  //           return {
-  //             id_surat: data.uuid,
-  //             id_tujuan: tj.id_tujuan,
-  //           };
-  //         });
+            // tetapkan document sebelumnya
+            var document = data.document;
+          } else {
+            // jika ada document
 
-  //         await surat_tujuan.bulkCreate(dataTujuan);
+            // ganti url baru
+            var document = req.files.document[0].path;
+            // hapus data sebelumnya
+          }
+          // cek isi data sebelumnya
+          if (data.document === null) {
+            // jika tidak ada document sebelumnya
 
-  //         // mapping dan insert pengesahan
-  //         const dataPengesahan = value.pengesahan.map((tj) => {
-  //           return {
-  //             id_surat: data.uuid,
-  //             id_pengesahan: tj.id_pengesahan,
-  //           };
-  //         });
+            // insert data ke database
+            await data.update({
+              nomer_surat: value.nomer_surat,
+              lampiran: value.lampiran,
+              perihal: value.perihal,
+              isi: value.isi,
+              tanggal_surat: value.tanggal_surat,
+              updatedBy: req.uuid,
+              document: document,
+            });
+          } else {
+            // jika ada
 
-  //         await surat_pengesahan.bulkCreate(dataPengesahan);
+            // hapus document lama
+            fs.unlinkSync(data.document);
+            // insert data ke database
+            await data.update({
+              nomer_surat: value.nomer_surat,
+              lampiran: value.lampiran,
+              perihal: value.perihal,
+              isi: value.isi,
+              tanggal_surat: value.tanggal_surat,
+              updatedBy: req.uuid,
+              document: document,
+            });
+          }
 
-  //         // response berhasil
-  //         res.status(200).json({
-  //           message: "Berhasil megubah surat",
-  //         });
-  //       }
-  //     }
-  //   } catch (err) {
-  //     // jika gagal
+          // response berhasil
+          res.status(201).json({
+            message: "Berhasil mengubah surat",
+          });
+        }
+      }
+    } catch (err) {
+      // jika gagal
 
-  //     // response error
-  //     res.status(500).json({
-  //       statusCode: 500,
-  //       err: err.message,
-  //       message: "Internal Server Error",
-  //     });
-  //   }
-  // },
+      console.log(err);
+
+      // response error
+      res.status(500).json({
+        statusCode: 500,
+        err: err.message,
+        message: "Internal Server Error",
+      });
+    }
+  },
 
   // delete tujuan
   destroy: async (req, res) => {

@@ -58,9 +58,5 @@ module.exports = {
       "string.base": "isi surat harus berisi huruf",
       "string.empty": "isi surat harus tidak boleh kosong",
     }),
-    document: Joi.string().messages({
-      "string.base": "isi surat harus berisi huruf",
-      "string.empty": "isi surat harus tidak boleh kosong",
-    }),
   }),
 };

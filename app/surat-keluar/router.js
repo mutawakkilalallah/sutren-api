@@ -1,5 +1,5 @@
 const express = require("express");
-const { index, create, detail, destroy } = require("./controller");
+const { index, create, detail, destroy, edit } = require("./controller");
 const router = express.Router();
 const { admin } = require("../../middlewares/authorization");
 
@@ -13,7 +13,7 @@ router.get("/:uuid", admin, detail);
 router.post("/", admin, create);
 
 // routing edit surat
-// router.put("/:uuid", edit);
+router.put("/:uuid", admin, edit);
 
 // routing delete surat
 router.delete("/:uuid", admin, destroy);
