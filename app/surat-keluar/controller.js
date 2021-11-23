@@ -328,38 +328,18 @@ module.exports = {
 
             // ganti url baru
             var document = req.files.document[0].path;
-            // hapus data sebelumnya
           }
-          // cek isi data sebelumnya
-          if (data.document === null) {
-            // jika tidak ada document sebelumnya
 
-            // insert data ke database
-            await data.update({
-              nomer_surat: value.nomer_surat,
-              lampiran: value.lampiran,
-              perihal: value.perihal,
-              isi: value.isi,
-              tanggal_surat: value.tanggal_surat,
-              updatedBy: req.uuid,
-              document: document,
-            });
-          } else {
-            // jika ada
-
-            // hapus document lama
-            fs.unlinkSync(data.document);
-            // insert data ke database
-            await data.update({
-              nomer_surat: value.nomer_surat,
-              lampiran: value.lampiran,
-              perihal: value.perihal,
-              isi: value.isi,
-              tanggal_surat: value.tanggal_surat,
-              updatedBy: req.uuid,
-              document: document,
-            });
-          }
+          // insert data ke database
+          await data.update({
+            nomer_surat: value.nomer_surat,
+            lampiran: value.lampiran,
+            perihal: value.perihal,
+            isi: value.isi,
+            tanggal_surat: value.tanggal_surat,
+            updatedBy: req.uuid,
+            document: document,
+          });
 
           // response berhasil
           res.status(201).json({
