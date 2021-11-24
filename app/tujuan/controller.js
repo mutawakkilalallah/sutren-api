@@ -231,7 +231,7 @@ module.exports = {
         await data.destroy();
 
         // response berhasil
-        res.status(201).json({
+        res.status(200).json({
           message: "Berhasil menghapus tujuan",
         });
       }

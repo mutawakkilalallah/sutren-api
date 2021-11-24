@@ -262,7 +262,7 @@ module.exports = {
         await surat_pengesahan.bulkCreate(dataPengesahan);
 
         // response berhasil
-        res.status(200).json({
+        res.status(201).json({
           message: "Berhasil menambahkan surat",
         });
       }
@@ -399,7 +399,7 @@ module.exports = {
       }
 
       // response berhasil
-      res.status(201).json({
+      res.status(200).json({
         message: "Berhasil menghapus surat",
       });
     } catch (err) {

@@ -81,25 +81,29 @@ module.exports = {
       });
       // jika username salah
       if (!User) {
-        res.status(404).json({
-          code: 404,
-          status: "NOT FOUND",
+        res.status(401).json({
+          code: 401,
+          status: "UNAUTHORIZED",
           message: "invalid username",
         });
       }
       // jika password salah
       const validPassword = await bcrypt.compare(password, User.password);
       if (!validPassword) {
-        res.status(404).json({
-          code: 404,
-          status: "NOT FOUND",
+        res.status(401).json({
+          code: 401,
+          status: "UNAUTHORIZED",
           message: "invalid password",
         });
       }
       // generate jwt token
-      const token = await jwt.sign({ uuid: User.uuid }, JWT_SECRET_KEY, {
-        expiresIn: "1h",
-      });
+      const token = await jwt.sign(
+        { uuid: User.uuid, akses: User.akses, nama: User.nama },
+        JWT_SECRET_KEY,
+        {
+          expiresIn: "1h",
+        }
+      );
       // response berhasil
       res
         .status(200)

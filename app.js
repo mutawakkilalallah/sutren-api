@@ -10,7 +10,7 @@ const path = require("path");
 const cors = require("cors");
 
 const { uploadStorage, uploadFilter } = require("./helper/multer");
-// const suratMasukRouter = require("./app/surat-masuk/router");
+const suratMasukRouter = require("./app/surat-masuk/router");
 const suratKeluarRouter = require("./app/surat-keluar/router");
 const userRouter = require("./app/user/router");
 const authentication = require("./middlewares/authentication");
@@ -42,12 +42,7 @@ app.use(
 );
 
 // routing surat masuk
-app.use("/api/surat-masuk/", authentication, (req, res) => {
-  res.status(500).json({
-    statusCode: 500,
-    message: "Surat masuk service on maintenance",
-  });
-});
+app.use("/api/surat-masuk/", authentication, suratMasukRouter);
 // routing surat keluar
 app.use("/api/surat-keluar/", authentication, suratKeluarRouter);
 // routing user

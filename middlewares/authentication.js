@@ -10,10 +10,10 @@ module.exports = async (req, res, next) => {
     // validasi token
     if (err) {
       // jika token tidak valid
-      res.status(498).json({
-        code: 498,
+      res.status(401).json({
+        code: 401,
         status: "UNATHORIZED",
-        message: "sesi telah berakhir silahkan login kembali",
+        message: "invalid token atau sudah kadaluarsa, silahkan login kembali",
       });
     } else {
       // jika token valid
