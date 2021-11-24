@@ -21,10 +21,10 @@ router.post("/register", authentication, sysadmin, validationCreate, create);
 // routing login user
 router.post("/login", validationLogin, login);
 // routing edit user
-router.put("/edit/:uuid", authentication, sysadmin, validationUpdate, update);
+router.put("/:uuid", authentication, sysadmin, validationUpdate, update);
 // routing detail user
-router.get("/detail/:uuid", authentication, detail);
+router.get("/:uuid", authentication, sysadmin, detail);
 // routing delete user
-router.delete("/delete/:uuid", authentication, sysadmin, destroy);
+router.delete("/:uuid", authentication, sysadmin, destroy);
 
 module.exports = router;
