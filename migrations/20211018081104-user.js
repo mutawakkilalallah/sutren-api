@@ -20,9 +20,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      picture: {
+      id_picture: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       akses: {
         type: Sequelize.STRING,

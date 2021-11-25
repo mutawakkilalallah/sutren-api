@@ -36,7 +36,7 @@ app.use(bodyParser.json());
 // multer
 app.use(
   multer({ storage: uploadStorage, fileFilter: uploadFilter }).fields([
-    { name: "document", maxCount: 1 },
+    { name: "document", maxCount: 5 },
     { name: "picture", maxCount: 1 },
   ])
 );

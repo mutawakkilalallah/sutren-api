@@ -29,8 +29,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      document: {
-        type: DataTypes.STRING,
+      id_document: {
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
       createdAt: {

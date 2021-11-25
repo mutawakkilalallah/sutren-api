@@ -67,7 +67,6 @@ module.exports = {
         attributes: [
           "uuid",
           "nomer_surat",
-          "lampiran",
           "perihal",
           "isi",
           "tanggal_surat",
@@ -147,7 +146,6 @@ module.exports = {
         attributes: [
           "uuid",
           "nomer_surat",
-          "lampiran",
           "perihal",
           "isi",
           "tanggal_surat",
@@ -233,7 +231,6 @@ module.exports = {
         // insert data ke database
         const data = await surat_keluar.create({
           nomer_surat: value.nomer_surat,
-          lampiran: value.lampiran,
           perihal: value.perihal,
           isi: value.isi,
           tanggal_surat: value.tanggal_surat,
@@ -317,28 +314,13 @@ module.exports = {
         } else {
           // jika berhasil
 
-          // cek apakah update document
-          if (!req.files.document) {
-            // jika tidak ada document
-
-            // tetapkan document sebelumnya
-            var document = data.document;
-          } else {
-            // jika ada document
-
-            // ganti url baru
-            var document = req.files.document[0].path;
-          }
-
           // insert data ke database
           await data.update({
             nomer_surat: value.nomer_surat,
-            lampiran: value.lampiran,
             perihal: value.perihal,
             isi: value.isi,
             tanggal_surat: value.tanggal_surat,
             updatedBy: req.uuid,
-            document: document,
           });
 
           // response berhasil
@@ -361,7 +343,7 @@ module.exports = {
     }
   },
 
-  // delete tujuan
+  // delete surta
   destroy: async (req, res) => {
     try {
       // jika berhasil
@@ -383,25 +365,17 @@ module.exports = {
           error: "NOT FOUND",
           message: "Surat tidak ditemukan",
         });
-      } else if (data.document) {
-        // jika ada data dan ada dokumen
-
-        // hapus dokumen
-        fs.unlinkSync(data.document);
-
-        // delete data dari database
-        await data.destroy();
       } else {
-        // jika tidak ada dokumen
+        // jika ada data
 
         // delete data dari database
         await data.destroy();
-      }
 
-      // response berhasil
-      res.status(200).json({
-        message: "Berhasil menghapus surat",
-      });
+        // response berhasil
+        res.status(200).json({
+          message: "Berhasil menghapus surat",
+        });
+      }
     } catch (err) {
       // jika gagal
 

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       nomer_agenda: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       kode_arsip: {
@@ -53,9 +53,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      document: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      id_document: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       createdAt: {
         field: "createdAt",

@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
       },
       nomer_agenda: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       kode_arsip: {
@@ -52,8 +52,8 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      document: {
-        type: Sequelize.STRING,
+      id_document: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       createdAt: {

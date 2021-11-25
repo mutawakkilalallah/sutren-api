@@ -16,10 +16,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      perihal: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       isi: {
         type: Sequelize.TEXT,
         allowNull: false,
@@ -28,8 +24,8 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      document: {
-        type: Sequelize.STRING,
+      id_document: {
+        type: Sequelize.INTEGER,
         allowNull: true,
       },
       createdAt: {
