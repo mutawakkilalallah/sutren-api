@@ -1,21 +1,21 @@
 const express = require("express");
 const { index, create, detail, destroy, edit } = require("./controller");
 const router = express.Router();
-// const { admin } = require("../../middlewares/authorization");
+const { admin } = require("../../middlewares/authorization");
 
 // routing data semua surat
-router.get("/", index);
+router.get("/", admin, index);
 
 // routing data surat
-router.get("/:uuid", detail);
+router.get("/:uuid", admin, detail);
 
 // routing tambah surat
-router.post("/", create);
+router.post("/", admin, create);
 
 // routing edit surat
-router.put("/:uuid", edit);
+router.put("/:uuid", admin, edit);
 
 // routing delete surat
-router.delete("/:uuid", destroy);
+router.delete("/:uuid", admin, destroy);
 
 module.exports = router;

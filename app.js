@@ -42,7 +42,7 @@ app.use(
 );
 
 // routing surat masuk
-app.use("/api/surat-masuk/", suratMasukRouter);
+app.use("/api/surat-masuk/", authentication, suratMasukRouter);
 // routing surat keluar
 app.use("/api/surat-keluar/", authentication, suratKeluarRouter);
 // routing user

@@ -207,8 +207,8 @@ module.exports = {
           alamat: value.alamat,
           perihal: value.perihal,
           keterangan: value.keterangan,
-          createdBy: "req.uuid",
-          updatedBy: "req.uuid",
+          createdBy: req.uuid,
+          updatedBy: req.uuid,
         });
 
         // mapping dan insert tujuan
@@ -289,7 +289,7 @@ module.exports = {
             alamat: value.alamat,
             perihal: value.perihal,
             keterangan: value.keterangan,
-            updatedBy: "req.uuid",
+            updatedBy: req.uuid,
           });
 
           // response berhasil
