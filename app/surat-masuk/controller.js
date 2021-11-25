@@ -31,11 +31,11 @@ module.exports = {
       const offset = 0 + (page - 1) * limit;
 
       // mengambil data ke database
-      const data = await surat_keluar.findAndCountAll({
+      const data = await surat_masuk.findAndCountAll({
         where: {
           [Op.or]: [
             {
-              nomer_surat: {
+              asal: {
                 [Op.like]: "%" + search + "%",
               },
             },
@@ -50,21 +50,21 @@ module.exports = {
         offset: offset,
         attributes: [
           "uuid",
-          "nomer_surat",
-          "perihal",
-          "isi",
+          "nomer_urut",
+          "nomer_agenda",
+          "kode_arsip",
+          "tanggal_terima",
           "tanggal_surat",
-          "createdAt",
-          "updatedAt",
+          "nomer_surat",
+          "asal",
+          "alamat",
+          "perihal",
+          "keterangan",
         ],
         include: [
           {
             model: tujuan,
             as: "tujuan_surat",
-          },
-          {
-            model: pengesahan,
-            as: "pengesahan_surat",
           },
           {
             model: user,
@@ -118,24 +118,24 @@ module.exports = {
       // jika berhasil
 
       // mengambil data ke database
-      const data = await surat_keluar.findOne({
+      const data = await surat_masuk.findOne({
         attributes: [
           "uuid",
-          "nomer_surat",
-          "perihal",
-          "isi",
+          "nomer_urut",
+          "nomer_agenda",
+          "kode_arsip",
+          "tanggal_terima",
           "tanggal_surat",
-          "createdAt",
-          "updatedAt",
+          "nomer_surat",
+          "asal",
+          "alamat",
+          "perihal",
+          "keterangan",
         ],
         include: [
           {
             model: tujuan,
             as: "tujuan_surat",
-          },
-          {
-            model: pengesahan,
-            as: "pengesahan_surat",
           },
           {
             model: user,
@@ -197,9 +197,18 @@ module.exports = {
 
         // insert data ke database
         const data = await surat_masuk.create({
+          nomer_urut: value.nomer_urut,
+          nomer_agenda: value.nomer_agenda,
+          kode_arsip: value.kode_arsip,
+          tanggal_terima: value.tanggal_terima,
+          tanggal_surat: value.tanggal_surat,
           nomer_surat: value.nomer_surat,
-          createdBy: req.uuid,
-          updatedBy: req.uuid,
+          asal: value.asal,
+          alamat: value.alamat,
+          perihal: value.perihal,
+          keterangan: value.keterangan,
+          createdBy: "req.uuid",
+          updatedBy: "req.uuid",
         });
 
         // mapping dan insert tujuan
@@ -235,7 +244,7 @@ module.exports = {
       // jika berhasil
 
       // mengambil data ke database
-      const data = await surat_keluar.findOne({
+      const data = await surat_masuk.findOne({
         where: {
           uuid: req.params.uuid,
         },
@@ -249,7 +258,7 @@ module.exports = {
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
-          message: "Tujuan tidak ditemukan",
+          message: "surat tidak ditemukan",
         });
       } else {
         // jika ada data
@@ -270,11 +279,17 @@ module.exports = {
 
           // insert data ke database
           await data.update({
-            nomer_surat: value.nomer_surat,
-            perihal: value.perihal,
-            isi: value.isi,
+            nomer_urut: value.nomer_urut,
+            nomer_agenda: value.nomer_agenda,
+            kode_arsip: value.kode_arsip,
+            tanggal_terima: value.tanggal_terima,
             tanggal_surat: value.tanggal_surat,
-            updatedBy: req.uuid,
+            nomer_surat: value.nomer_surat,
+            asal: value.asal,
+            alamat: value.alamat,
+            perihal: value.perihal,
+            keterangan: value.keterangan,
+            updatedBy: "req.uuid",
           });
 
           // response berhasil
@@ -303,7 +318,7 @@ module.exports = {
       // jika berhasil
 
       // mengambil data ke database
-      const data = await surat_keluar.findOne({
+      const data = await surat_masuk.findOne({
         where: {
           uuid: req.params.uuid,
         },
@@ -317,7 +332,7 @@ module.exports = {
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
-          message: "Surat tidak ditemukan",
+          message: "surat tidak ditemukan",
         });
       } else {
         // jika ada data

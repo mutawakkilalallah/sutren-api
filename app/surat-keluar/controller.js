@@ -278,7 +278,7 @@ module.exports = {
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
-          message: "Tujuan tidak ditemukan",
+          message: "surat tidak ditemukan",
         });
       } else {
         // jika ada data
