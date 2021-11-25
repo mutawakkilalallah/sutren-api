@@ -25,7 +25,8 @@ module.exports = {
         allowNull: true,
       },
       akses: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM,
+        values: ["sysadmin", "admin", "supervisor"],
         allowNull: false,
       },
       createdAt: {

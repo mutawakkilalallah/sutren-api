@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       akses: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM,
+        values: ["sysadmin", "admin", "supervisor"],
         allowNull: false,
       },
       id_picture: {
