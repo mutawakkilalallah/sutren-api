@@ -60,10 +60,10 @@ app.post("/api/test", async (req, res) => {
     const data = await test.create({
       nama: "Test Ke " + i,
     });
+    res.json({
+      message: "Test Selesai yang ke " + data.id,
+    });
   }
-  res.json({
-    message: "Test Selesai",
-  });
 });
 app.get("/api/test", async (req, res) => {
   const limit = parseInt(req.query.limit);
