@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+const { test } = require("./models");
 
 const { uploadStorage, uploadFilter } = require("./helper/multer");
 const suratMasukRouter = require("./app/surat-masuk/router");
@@ -51,5 +52,21 @@ app.use("/api/user/", userRouter);
 app.use("/api/surat-tujuan", authentication, tujuanRouter);
 // routing pengesahan
 app.use("/api/surat-pengesahan", authentication, pengesahanRouter);
+
+// testing
+app.post("/api/test", async (req, res) => {
+  for (let i = 0; i < 1000; i++) {
+    await test.create({
+      nama: "Test Ke " + i,
+    });
+  }
+  res.json({
+    message: "Test Selesai",
+  });
+});
+app.get("/api/test", async (req, res) => {
+  const data = await test.findAll();
+  res.json(data);
+});
 
 app.listen(port, console.log("server running on port " + port));
