@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  const SuratMasuk = sequelize.define(
-    "SuratMasuk",
+  const surat_masuk = sequelize.define(
+    "surat_masuk",
     {
       uuid: {
         type: DataTypes.UUIDV4,
@@ -77,5 +77,5 @@ module.exports = (sequelize, DataTypes) => {
       timestamp: true,
     }
   );
-  return SuratMasuk;
+  return surat_masuk;
 };

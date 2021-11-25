@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       id_picture: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       createdAt: {
         field: "createdAt",

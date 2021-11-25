@@ -13,11 +13,13 @@ module.exports = async (req, res, next) => {
       res.status(401).json({
         code: 401,
         status: "UNATHORIZED",
-        message: "invalid token atau sudah kadaluarsa, silahkan login kembali",
+        message:
+          "token tidak valid atau sudah kadaluarsa, silahkan login kembali",
       });
     } else {
       // jika token valid
       req.uuid = decoded.uuid;
+      req.akses = decoded.akses;
       next();
     }
   });

@@ -4,24 +4,21 @@ const {
   create,
   login,
   update,
-  detail,
-  destroy,
   index,
+  destroy,
+  detail,
 } = require("./controller");
-const validationCreate = require("../../validation/user-validation-create");
-const validationLogin = require("../../validation/user-validation-login");
-const validationUpdate = require("../../validation/user-validation-update");
 const authentication = require("../../middlewares/authentication");
 const { sysadmin } = require("../../middlewares/authorization");
 
 // routing semua data user
 router.get("/", authentication, sysadmin, index);
 // routing daftar user
-router.post("/register", authentication, sysadmin, validationCreate, create);
+router.post("/create", authentication, sysadmin, create);
 // routing login user
-router.post("/login", validationLogin, login);
+router.post("/login", login);
 // routing edit user
-router.put("/:uuid", authentication, sysadmin, validationUpdate, update);
+router.put("/:uuid", authentication, sysadmin, update);
 // routing detail user
 router.get("/:uuid", authentication, sysadmin, detail);
 // routing delete user

@@ -2,14 +2,8 @@ const { user } = require("../models");
 
 module.exports = {
   sysadmin: async (req, res, next) => {
-    // mengambil data user
-    const User = await user.findOne({
-      where: {
-        uuid: req.uuid,
-      },
-    });
     // cek role user
-    if (User.akses === "System Administrator") {
+    if (req.akses === "sysadmin") {
       // jika sysadmin lanjutkan
       req.uuid;
       next();
@@ -23,14 +17,8 @@ module.exports = {
     }
   },
   admin: async (req, res, next) => {
-    // mengambil data user
-    const User = await user.findOne({
-      where: {
-        uuid: req.uuid,
-      },
-    });
     // cek role user
-    if (User.akses === "Admin" || User.akses === "System Administrator") {
+    if (req.akses === "admin" || req.akses === "sysadmin") {
       // jika admin lanjutkan
       req.uuid;
       next();

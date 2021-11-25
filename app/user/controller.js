@@ -1,65 +1,69 @@
 require("dotenv").config();
+const { Op } = require("sequelize");
 const { user } = require("../../models");
+const validation = require("../../validation/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { JWT_SECRET_KEY } = process.env;
-const { Op } = require("sequelize");
-const fs = require("fs");
 
 module.exports = {
-  // menambahkan user baru
+  // create user
   create: async (req, res) => {
     try {
-      // jika berhasil menambahkan user
+      // jika berhasil
 
-      // cek user sesuai username
-      const user = await user.findOne({
-        where: {
-          username: req.body.username,
-        },
-      });
-      // cek username apakah ada
-      if (user) {
-        res.status(409).json({
-          statusCode: 403,
-          error: "FORBIDDEN",
-          message: "username sudah terdaftar",
+      // cek hasil validasi
+      const { error, value } = validation.create.validate(req.body);
+      if (error) {
+        // jika terjadi error
+
+        // respon bad request
+        res.status(400).json({
+          statusCode: 400,
+          err: "BAD REQUEST",
+          message: error.message,
         });
       } else {
-        // cek gambar
-        if (!req.files.picture) {
-          // jika tidak ada gambar
+        // jika berhasil
 
-          // response bad request
-          return res.status(400).json({
-            statusCode: 400,
-            error: "BAD REQUEST",
-            message: "gambar harus disertakan dengan format png, jpeg atau jpg",
+        // cek user sesuai username
+        const data = await user.findOne({
+          where: {
+            username: req.body.username,
+          },
+        });
+        // cek username apakah ada
+        if (data) {
+          res.status(409).json({
+            statusCode: 403,
+            error: "FORBIDDEN",
+            message: "username sudah terdaftar",
+          });
+        } else {
+          // hashing password
+          const password = await bcrypt.hash(value.password, 10);
+          // menambahkan user ke database
+          await user.create({
+            nama: value.nama,
+            username: value.username,
+            password: password,
+            akses: value.akses,
+          });
+
+          // response berhasil
+          res.status(200).json({
+            message: "Berhasil menambahkan user",
           });
         }
-        // hashing password
-        const password = await bcrypt.hash(req.body.password, 10);
-        // menambahkan user ke database
-        await user.create({
-          nama: req.body.nama,
-          username: req.body.username,
-          password: password,
-          akses: req.body.akses,
-          picture: req.files.picture[0].path,
-        });
-        // response berhasil
-        res.status(201).json({
-          message: "berhasil menambahkan user",
-        });
       }
     } catch (err) {
-      // jika gagal menambahkan user
+      // jika gagal
 
-      // response server error
+      // response error
       res.status(500).json({
         statusCode: 500,
-        error: err.message,
-        message: "Terjadi kesalahan Pada server",
+        err: err.message,
+        message: "Internal Server Error",
       });
     }
   },
@@ -67,52 +71,65 @@ module.exports = {
   // login
   login: async (req, res) => {
     try {
-      // jika berhasil  login
+      // jika berhasil
 
-      // mengambil data inputan
-      username = req.body.username;
-      password = req.body.password;
+      // cek hasil validasi
+      const { error, value } = validation.login.validate(req.body);
+      if (error) {
+        // jika terjadi error
 
-      // cek apakah ada user
-      const User = await user.findOne({
-        where: {
-          username: username,
-        },
-      });
-      // jika username salah
-      if (!User) {
-        res.status(401).json({
-          code: 401,
-          status: "UNAUTHORIZED",
-          message: "invalid username",
+        // respon bad request
+        res.status(400).json({
+          statusCode: 400,
+          err: "BAD REQUEST",
+          message: error.message,
         });
-      }
-      // jika password salah
-      const validPassword = await bcrypt.compare(password, User.password);
-      if (!validPassword) {
-        res.status(401).json({
-          code: 401,
-          status: "UNAUTHORIZED",
-          message: "invalid password",
+      } else {
+        // mengambil data inputan
+        username = value.username;
+        password = value.password;
+
+        // cek apakah ada user
+        const data = await user.findOne({
+          where: {
+            username: username,
+          },
         });
-      }
-      // generate jwt token
-      const token = await jwt.sign(
-        { uuid: User.uuid, akses: User.akses, nama: User.nama },
-        JWT_SECRET_KEY,
-        {
-          expiresIn: "1h",
+        // jika username salah
+        if (!data) {
+          res.status(401).json({
+            code: 401,
+            status: "UNAUTHORIZED",
+            message: "invalid username",
+          });
         }
-      );
-      // response berhasil
-      res
-        .status(200)
-        .set({
-          "x-sutren-token": token,
-        })
-        .json({
-          message: "berhasil login",
-        });
+        // jika password salah
+        const validPassword = await bcrypt.compare(password, data.password);
+        if (!validPassword) {
+          res.status(401).json({
+            code: 401,
+            status: "UNAUTHORIZED",
+            message: "invalid password",
+          });
+        }
+        // generate jwt token
+        const token = await jwt.sign(
+          { uuid: data.uuid, akses: data.akses, nama: data.nama },
+          JWT_SECRET_KEY,
+          {
+            expiresIn: "1h",
+          }
+        );
+        // response berhasil
+        res
+          .status(200)
+          .set({
+            "x-sutren-token": token,
+          })
+          .json({
+            message: "berhasil login",
+          });
+      }
     } catch (err) {
       // jika gagal login
 
@@ -124,71 +141,54 @@ module.exports = {
       });
     }
   },
+
+  // update user
   update: async (req, res) => {
     try {
       // jika berhasil edit user
 
-      // mengambil parameter uuid
-      const uuid = req.params.uuid;
-      // cek user di database
-      const data = await user.findOne({
-        where: {
-          uuid: uuid,
-        },
-      });
-      // cek hasil data di database
-      if (data < 1) {
-        // jika tidak ada data user
-        res.status(404).json({
-          statusCode: 404,
-          error: "NOT FOUND",
-          message: "user tidak ditemukan",
+      // cek hasil validasi
+      const { error, value } = validation.update.validate(req.body);
+      console.log(error, value);
+      if (error) {
+        // jika terjadi error
+
+        // respon bad request
+        res.status(400).json({
+          statusCode: 400,
+          err: "BAD REQUEST",
+          message: error.message,
         });
       } else {
-        // cek apakah mengubah gambar
-        if (!req.files.picture) {
-          // jika tidak mengubah gambar
-
-          // hashing password
-          const password = await bcrypt.hash(req.body.password, 10);
-          // update ke database
-          await user.update(
-            {
-              nama: req.body.nama,
-              password: password,
-            },
-            {
-              where: {
-                uuid: uuid,
-              },
-            }
-          );
-        } else {
-          // jika mengubah gambar
-
-          // menghapus gambar yang lama
-          fs.unlinkSync(data.picture);
-
-          // hashing password
-          const password = await bcrypt.hash(req.body.password, 10);
-          // update ke database
-          await user.update(
-            {
-              nama: req.body.nama,
-              password: password,
-              picture: req.files.picture[0].path,
-            },
-            {
-              where: {
-                uuid: uuid,
-              },
-            }
-          );
-        }
-        // response berhasil
-        res.status(201).json({
-          message: "berhasil mengubah user",
+        // cek user di database
+        const data = await user.findOne({
+          where: {
+            uuid: req.params.uuid,
+          },
         });
+        // cek hasil data di database
+        if (data < 1) {
+          // jika tidak ada data user
+          res.status(404).json({
+            statusCode: 404,
+            error: "NOT FOUND",
+            message: "user tidak ditemukan",
+          });
+        } else {
+          // hashing password
+          const password = await bcrypt.hash(req.body.password, 10);
+          // update ke database
+          await data.update({
+            nama: value.nama,
+            password: password,
+            akses: value.akses,
+          });
+
+          // response berhasil
+          res.status(201).json({
+            message: "berhasil mengubah user",
+          });
+        }
       }
     } catch (err) {
       // jika gagal mengubah data user
@@ -202,44 +202,39 @@ module.exports = {
     }
   },
 
-  // menghapus data user
+  // menghapus user
   destroy: async (req, res) => {
     try {
-      // jika berhasil menghapus data user
+      // jika berhasil
 
-      // mengambil parameter uuid
-      const uuid = req.params.uuid;
-      // menghapus picture yang lama
+      // mencari data
       const data = await user.findOne({
         where: {
-          uuid: uuid,
+          uuid: req.params.uuid,
         },
       });
       if (data < 1) {
-        // jika tidak ada data user
+        // jika tidak ada data
+
+        // response bad request
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
           message: "user tidak ditemukan",
         });
       } else {
-        // jika ada data user
-        fs.unlinkSync(data.picture);
+        // jika ada data
+
         // Delete dari database
-        await user.destroy({
-          where: {
-            uuid: uuid,
-          },
-        });
+        await data.destroy();
+
         // response berhasil
         res.status(200).json({
           message: "berhasil menghapus user",
         });
       }
     } catch (err) {
-      // jika gagal edit user
-
-      // response server error
+      // jika gagal
       res.status(500).json({
         statusCode: 500,
         error: err.message,
@@ -248,134 +243,112 @@ module.exports = {
     }
   },
 
-  // mengambil data user berdasarkan uuid
-  detail: async (req, res) => {
-    // mengambil parameter uuid
-    const uuid = req.params.uuid;
-    // mengambil data user berdasarkan uuid
+  // get all user
+  index: async (req, res) => {
     try {
-      // jika berhasil mengambil data user
+      // jika berhasil
+
+      // mengambil parameter
+      const search = req.query.cari || "";
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 5;
+      const offset = 0 + (page - 1) * limit;
+
+      // mengambil data ke database
+      const data = await user.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {
+              username: {
+                [Op.like]: "%" + search + "%",
+              },
+            },
+            {
+              nama: {
+                [Op.like]: "%" + search + "%",
+              },
+            },
+          ],
+        },
+        order: [["createdAt", "DESC"]],
+        limit: limit,
+        offset: offset,
+      });
+
+      // cek apakah ada data
+      if (data.count < 1) {
+        // jika tidak ada data
+
+        // response kosong
+        res
+          .status(200)
+          .set({
+            "x-data-total": data.count,
+            "x-pagination-data-limit": limit,
+            "x-pagination-total-page": Math.ceil(data.count / limit),
+          })
+          .json([]);
+      } else {
+        // jika ada data
+
+        // response berhasil
+        res
+          .status(200)
+          .set({
+            "x-data-total": data.count,
+            "x-pagination-data-limit": limit,
+            "x-pagination-total-page": Math.ceil(data.count / limit),
+          })
+          .json(data.rows);
+      }
+    } catch (err) {
+      // jika gagal
+
+      // response error
+      res.status(500).json({
+        statusCode: 500,
+        err: err.message,
+        message: "Internal Server Error",
+      });
+    }
+  },
+
+  // get detail user
+  detail: async (req, res) => {
+    try {
+      // jika berhasil
+
+      // mengambil data ke database
       const data = await user.findOne({
         where: {
-          uuid: uuid,
+          uuid: req.params.uuid,
         },
       });
-      if (data < 1) {
-        // jika tidak ada data user
 
+      // cek apakah ada data
+      if (!data) {
+        // jika tidak ada data
+
+        // response kosong
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
           message: "user tidak ditemukan",
         });
       } else {
-        // jika ada data user
+        // jika ada data
 
         // response berhasil
         res.status(200).json(data);
       }
     } catch (err) {
-      // jika gagal mengambil data user
+      // jika gagal
 
-      // response server error
+      // response error
       res.status(500).json({
         statusCode: 500,
-        error: err.message,
-        message: "Terjadi kesalahan Pada server",
-      });
-    }
-  },
-
-  // mengambil semua data user
-  index: async (req, res) => {
-    try {
-      // mengambil query parameter
-      const search = req.query.cari;
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 3;
-      const offset = 0 + (page - 1) * limit;
-      // jika berhasil mengambil semua data user
-
-      // jika tidak ada pencarian
-      if (!search) {
-        const data = await user.findAndCountAll({
-          order: [["createdAt", "DESC"]],
-          limit: limit,
-          offset: offset,
-        });
-        const totalData = data.count;
-        const totalPage = Math.ceil(totalData / limit);
-
-        if (totalData < 1) {
-          // jika tidak ada semua user
-
-          // response array kosong
-          empetyData = [];
-          res.status(200).json(empetyData);
-        } else {
-          // jika ada semua surat  masuk
-
-          // response berhasil
-          res
-            .status(200)
-            .set({
-              "x-data-total": totalData,
-              "x-pagination-data-limit": limit,
-              "x-pagination-total-page": totalPage,
-            })
-            .json(data.rows);
-        }
-      } else {
-        const data = await user.findAndCountAll({
-          where: {
-            [Op.or]: [
-              {
-                username: {
-                  [Op.like]: "%" + search + "%",
-                },
-              },
-              {
-                nama: {
-                  [Op.like]: "%" + search + "%",
-                },
-              },
-            ],
-          },
-          order: [["createdAt", "DESC"]],
-          limit: limit,
-          offset: offset,
-        });
-        const totalData = data.count;
-        const totalPage = Math.ceil(totalData / limit);
-
-        if (totalData < 1) {
-          // jika tidak ada semua user
-
-          // response array kosong
-          empetyData = [];
-          res.status(200).json(empetyData);
-        } else {
-          // jika ada semua surat  masuk
-
-          // response berhasil
-          res
-            .status(200)
-            .set({
-              "x-data-total": totalData,
-              "x-pagination-data-limit": limit,
-              "x-pagination-total-page": totalPage,
-            })
-            .json(data.rows);
-        }
-      }
-    } catch (err) {
-      // jika gagal mengambil semua data surat  masuk
-
-      // response server error
-      res.status(500).json({
-        statusCode: 500,
-        error: err.message,
-        message: "Terjadi kesalahan Pada server",
+        err: err.message,
+        message: "Internal Server Error",
       });
     }
   },

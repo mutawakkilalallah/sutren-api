@@ -70,7 +70,6 @@ module.exports = {
           "perihal",
           "isi",
           "tanggal_surat",
-          "document",
           "createdAt",
           "updatedAt",
         ],
@@ -86,14 +85,7 @@ module.exports = {
           {
             model: user,
             as: "created_by",
-            attributes: [
-              "uuid",
-              "nama",
-              "username",
-              "akses",
-              "picture",
-              "createdAt",
-            ],
+            attributes: ["uuid", "nama", "username", "akses", "createdAt"],
           },
         ],
       });
@@ -149,7 +141,6 @@ module.exports = {
           "perihal",
           "isi",
           "tanggal_surat",
-          "document",
           "createdAt",
           "updatedAt",
         ],
@@ -165,14 +156,7 @@ module.exports = {
           {
             model: user,
             as: "created_by",
-            attributes: [
-              "uuid",
-              "nama",
-              "username",
-              "akses",
-              "picture",
-              "createdAt",
-            ],
+            attributes: ["uuid", "nama", "username", "akses", "createdAt"],
           },
         ],
         where: {
@@ -215,7 +199,6 @@ module.exports = {
 
       // cek hasil validasi
       const { error, value } = validation.create.validate(req.body);
-      console.log(value);
       if (error) {
         // jika terjadi error
 
@@ -343,7 +326,7 @@ module.exports = {
     }
   },
 
-  // delete surta
+  // delete surat keluar
   destroy: async (req, res) => {
     try {
       // jika berhasil

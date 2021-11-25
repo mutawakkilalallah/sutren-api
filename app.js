@@ -42,7 +42,13 @@ app.use(
 );
 
 // routing surat masuk
-app.use("/api/surat-masuk/", authentication, suratMasukRouter);
+app.use("/api/surat-masuk/", authentication, (req, res) => {
+  res.status(500).json({
+    statusCode: 500,
+    err: "Internal Server Error",
+    message: "Server sutren sedang maintenance",
+  });
+});
 // routing surat keluar
 app.use("/api/surat-keluar/", authentication, suratKeluarRouter);
 // routing user

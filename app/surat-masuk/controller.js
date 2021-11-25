@@ -1,329 +1,343 @@
-const { SuratMasuk, User } = require("../../models");
 const { Op } = require("sequelize");
 const fs = require("fs");
+const { surat_masuk, tujuan, user, surat_tujuan } = require("../../models");
+const validation = require("../../validation/surat-masuk");
+
+// relasi table many to one
+user.hasOne(surat_masuk, { foreignKey: "createdBy" });
+surat_masuk.belongsTo(user, { foreignKey: "createdBy", as: "created_by" });
+
+// relasi tabel many to many
+surat_masuk.belongsToMany(tujuan, {
+  through: "surat_tujuan",
+  foreignKey: "id_surat",
+  as: "tujuan_surat",
+});
+tujuan.belongsToMany(surat_masuk, {
+  through: "surat_tujuan",
+  foreignKey: "id_tujuan",
+});
 
 module.exports = {
-  // mengambil semua data surat masuk
+  // get all surat masuk
   index: async (req, res) => {
     try {
-      // mengambil query parameter
-      const search = req.query.cari;
+      // jika berhasil
+
+      // mengambil parameter
+      const search = req.query.cari || "";
       const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 3;
+      const limit = parseInt(req.query.limit) || 5;
       const offset = 0 + (page - 1) * limit;
-      // jika berhasil mengambil semua data surat masuk
 
-      // jika tidak ada pencarian
-      if (!search) {
-        const data = await SuratMasuk.findAndCountAll({
-          order: [["createdAt", "DESC"]],
-          limit: limit,
-          offset: offset,
-        });
-        const totalData = data.count;
-        const totalPage = Math.ceil(totalData / limit);
-
-        if (totalData < 1) {
-          // jika tidak ada semua surat masuk
-
-          // response array kosong
-          empetyData = [];
-          res.status(200).json(empetyData);
-        } else {
-          // jika ada semua surat  masuk
-
-          // response berhasil
-          res
-            .status(200)
-            .set({
-              "x-data-total": totalData,
-              "x-pagination-data-limit": limit,
-              "x-pagination-total-page": totalPage,
-            })
-            .json(data.rows);
-        }
-      } else {
-        const data = await SuratMasuk.findAndCountAll({
-          where: {
-            [Op.or]: [
-              {
-                asal: {
-                  [Op.like]: "%" + search + "%",
-                },
+      // mengambil data ke database
+      const data = await surat_keluar.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {
+              nomer_surat: {
+                [Op.like]: "%" + search + "%",
               },
-              {
-                tujuan: {
-                  [Op.like]: "%" + search + "%",
-                },
+            },
+            {
+              perihal: {
+                [Op.like]: "%" + search + "%",
               },
-            ],
+            },
+          ],
+        },
+        limit: limit,
+        offset: offset,
+        attributes: [
+          "uuid",
+          "nomer_surat",
+          "perihal",
+          "isi",
+          "tanggal_surat",
+          "createdAt",
+          "updatedAt",
+        ],
+        include: [
+          {
+            model: tujuan,
+            as: "tujuan_surat",
           },
-          order: [["createdAt", "DESC"]],
-          limit: limit,
-          offset: offset,
-        });
-        const totalData = data.count;
-        const totalPage = Math.ceil(totalData / limit);
+          {
+            model: pengesahan,
+            as: "pengesahan_surat",
+          },
+          {
+            model: user,
+            as: "created_by",
+            attributes: ["uuid", "nama", "username", "akses", "createdAt"],
+          },
+        ],
+      });
 
-        if (totalData < 1) {
-          // jika tidak ada semua surat masuk
+      // cek apakah ada data
+      if (data.count < 1) {
+        // jika tidak ada data
 
-          // response array kosong
-          empetyData = [];
-          res.status(200).json(empetyData);
-        } else {
-          // jika ada semua surat  masuk
+        // response kosong
+        res
+          .status(200)
+          .set({
+            "x-data-total": data.count,
+            "x-pagination-data-limit": limit,
+            "x-pagination-total-page": Math.ceil(data.count / limit),
+          })
+          .json([]);
+      } else {
+        // jika ada data
 
-          // response berhasil
-          res
-            .status(200)
-            .set({
-              "x-data-total": totalData,
-              "x-pagination-data-limit": limit,
-              "x-pagination-total-page": totalPage,
-            })
-            .json(data.rows);
-        }
+        // response berhasil
+        res
+          .status(200)
+          .set({
+            "x-data-total": data.count,
+            "x-pagination-data-limit": limit,
+            "x-pagination-total-page": Math.ceil(data.count / limit),
+          })
+          .json(data.rows);
       }
     } catch (err) {
-      // jika gagal mengambil semua data surat  masuk
+      // jika gagal
 
-      // response server error
+      // response gagal
       res.status(500).json({
         statusCode: 500,
-        error: err.message,
-        message: "Terjadi kesalahan Pada server",
+        err: err.message,
+        message: "Internal Server Error",
       });
     }
   },
 
-  // mengambil data surat berdasarkan uuid
+  // get detail surat masuk
   detail: async (req, res) => {
-    // mengambil parameter uuid
-    const uuid = req.params.uuid;
-    // mengambil data surat berdasarkan uuid
     try {
-      // jika berhasil mengambil data surat
-      const data = await SuratMasuk.findOne({
+      // jika berhasil
+
+      // mengambil data ke database
+      const data = await surat_keluar.findOne({
+        attributes: [
+          "uuid",
+          "nomer_surat",
+          "perihal",
+          "isi",
+          "tanggal_surat",
+          "createdAt",
+          "updatedAt",
+        ],
+        include: [
+          {
+            model: tujuan,
+            as: "tujuan_surat",
+          },
+          {
+            model: pengesahan,
+            as: "pengesahan_surat",
+          },
+          {
+            model: user,
+            as: "created_by",
+            attributes: ["uuid", "nama", "username", "akses", "createdAt"],
+          },
+        ],
         where: {
-          uuid: uuid,
+          uuid: req.params.uuid,
         },
       });
-      if (data < 1) {
-        // jika tidak ada data surat
 
-        // response not found
+      // cek apakah ada data
+      if (!data) {
+        // jika tidak ada data
+
+        // response kosong
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
-          message: "surat tidak ditemukan",
+          message: "Surat tidak ditemukan",
         });
       } else {
-        // jika ada data surat
+        // jika ada data
 
         // response berhasil
         res.status(200).json(data);
       }
     } catch (err) {
-      // jika gagal mengambil data surat
+      // jika gagal
 
-      // response server error
+      // response error
       res.status(500).json({
         statusCode: 500,
-        error: err.message,
-        message: "Terjadi kesalahan Pada server",
+        err: err.message,
+        message: "Internal Server Error",
       });
     }
   },
 
-  // menambahkan data surat
+  // create surat masuk
   create: async (req, res) => {
     try {
-      // jika berhasil menambah data surat
+      // jika berhasil
 
-      // cek apakah ada document
-      if (!req.files.document) {
-        // jika tidak ada document
-        // response bad request
-        return res.status(400).json({
-          code: 400,
-          status: "BAD REQUEST",
-          message: "dokumen surat harus dilampirkan dengan format pdf",
+      // cek hasil validasi
+      const { error, value } = validation.create.validate(req.body);
+      if (error) {
+        // jika terjadi error
+
+        // respon bad request
+        res.status(400).json({
+          statusCode: 400,
+          err: "BAD REQUEST",
+          message: error.message,
         });
       } else {
-        // jika ada document
+        // jika berhasil
 
         // insert data ke database
-        await SuratMasuk.create({
-          nomer_urut: req.body.nomer_urut,
-          nomer_agenda: req.body.nomer_agenda,
-          kode_arsip: req.body.kode_arsip,
-          tanggal_terima: req.body.tanggal_terima,
-          tanggal_surat: req.body.tanggal_surat,
-          asal: req.body.asal,
-          alamat: req.body.alamat,
-          nomer_surat: req.body.nomer_surat,
-          tujuan: req.body.tujuan,
-          perihal: req.body.perihal,
-          keterangan: req.body.keterangan,
-          document: req.files.document[0].path,
+        const data = await surat_masuk.create({
+          nomer_surat: value.nomer_surat,
           createdBy: req.uuid,
           updatedBy: req.uuid,
         });
+
+        // mapping dan insert tujuan
+        const dataTujuan = value.tujuan.map((tj) => {
+          return {
+            id_surat: data.uuid,
+            id_tujuan: tj,
+          };
+        });
+
+        await surat_tujuan.bulkCreate(dataTujuan);
+
         // response berhasil
         res.status(201).json({
-          message: "berhasil menambahkan surat",
+          message: "Berhasil menambahkan surat",
         });
       }
     } catch (err) {
-      // jika gagal menambah data surat
+      // jika gagal
 
-      // response server error
+      // response gagal
       res.status(500).json({
         statusCode: 500,
-        error: err.message,
-        message: "Terjadi kesalahan Pada server",
+        err: err.message,
+        message: "Internal Server Error",
       });
     }
   },
 
-  // mengubah data surat
-  update: async (req, res) => {
+  // update surat masuk
+  edit: async (req, res) => {
     try {
-      // jika berhasil mengubah data surat
+      // jika berhasil
 
-      // mengambil parameter uuid
-      const uuid = req.params.uuid;
-      // cek surat di database
-      const data = await SuratMasuk.findOne({
+      // mengambil data ke database
+      const data = await surat_keluar.findOne({
         where: {
-          uuid: uuid,
+          uuid: req.params.uuid,
         },
       });
-      // cek hasil data di database
-      if (data < 1) {
-        // response not found
+
+      // cek apakah ada data
+      if (!data) {
+        // jika tidak ada data
+
+        // response kosong
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
-          message: "surat tidak ditemukan",
+          message: "Tujuan tidak ditemukan",
         });
       } else {
-        // cek apakah mengubah document
-        if (!req.files.document) {
-          // jika tidak mengubah document
+        // jika ada data
 
-          // update ke database
-          await SuratMasuk.update(
-            {
-              nomer_urut: req.body.nomer_urut,
-              nomer_agenda: req.body.nomer_agenda,
-              kode_arsip: req.body.kode_arsip,
-              tanggal_terima: req.body.tanggal_terima,
-              tanggal_surat: req.body.tanggal_surat,
-              asal: req.body.asal,
-              alamat: req.body.alamat,
-              nomer_surat: req.body.nomer_surat,
-              tujuan: req.body.tujuan,
-              perihal: req.body.perihal,
-              keterangan: req.body.keterangan,
-              updatedBy: req.uuid,
-            },
-            {
-              where: {
-                uuid: uuid,
-              },
-            }
-          );
+        // cek hasil validasi
+        const { error, value } = validation.edit.validate(req.body);
+        if (error) {
+          // jika terjadi error
+
+          // respon bad request
+          res.status(400).json({
+            statusCode: 400,
+            err: "BAD REQUEST",
+            message: error.message,
+          });
         } else {
-          // jika mengubah document
+          // jika berhasil
 
-          // menghapus document yang lama
-          fs.unlinkSync(data.document);
-          // update ke database
-          await SuratMasuk.update(
-            {
-              nomer_urut: req.body.nomer_urut,
-              nomer_agenda: req.body.nomer_agenda,
-              kode_arsip: req.body.kode_arsip,
-              tanggal_terima: req.body.tanggal_terima,
-              tanggal_surat: req.body.tanggal_surat,
-              asal: req.body.asal,
-              alamat: req.body.alamat,
-              nomer_surat: req.body.nomer_surat,
-              tujuan: req.body.tujuan,
-              perihal: req.body.perihal,
-              keterangan: req.body.keterangan,
-              document: req.files.document[0].path,
-              updatedBy: req.uuid,
-            },
-            {
-              where: {
-                uuid: uuid,
-              },
-            }
-          );
+          // insert data ke database
+          await data.update({
+            nomer_surat: value.nomer_surat,
+            perihal: value.perihal,
+            isi: value.isi,
+            tanggal_surat: value.tanggal_surat,
+            updatedBy: req.uuid,
+          });
+
+          // response berhasil
+          res.status(201).json({
+            message: "Berhasil mengubah surat",
+          });
         }
-        // response berhasil
-        res.status(201).json({
-          message: "berhasil mengubah surat",
-        });
       }
     } catch (err) {
-      // jika gagal mengubah data surat
+      // jika gagal
 
-      // response server error
+      console.log(err);
+
+      // response error
       res.status(500).json({
         statusCode: 500,
-        error: err.message,
-        message: "Terjadi kesalahan Pada server",
+        err: err.message,
+        message: "Internal Server Error",
       });
     }
   },
 
-  // menghapus data surat
+  // delete surat masuk
   destroy: async (req, res) => {
     try {
-      // jika berhasil menghapus data surat
+      // jika berhasil
 
-      // mengambil parameter uuid
-      const uuid = req.params.uuid;
-      // menghapus document yang lama
-      const data = await SuratMasuk.findOne({
+      // mengambil data ke database
+      const data = await surat_keluar.findOne({
         where: {
-          uuid: uuid,
+          uuid: req.params.uuid,
         },
       });
-      if (data < 1) {
-        // jika tidak ada data surat
-        // response not found
+
+      // cek apakah ada data
+      if (!data) {
+        // jika tidak ada data
+
+        // response kosong
         res.status(404).json({
           statusCode: 404,
           error: "NOT FOUND",
-          message: "surat tidak ditemukan",
+          message: "Surat tidak ditemukan",
         });
       } else {
-        // jika ada data surat
-        fs.unlinkSync(data.document);
-        // Delete dari database
-        await SuratMasuk.destroy({
-          where: {
-            uuid: uuid,
-          },
-        });
+        // jika ada data
+
+        // delete data dari database
+        await data.destroy();
+
         // response berhasil
         res.status(200).json({
-          message: "berhasil menghapus surat",
+          message: "Berhasil menghapus surat",
         });
       }
     } catch (err) {
-      // jika gagal menghapus data surat
+      // jika gagal
 
-      // response server error
+      // response error
       res.status(500).json({
         statusCode: 500,
-        error: err.message,
-        message: "Terjadi kesalahan Pada server",
+        err: err.message,
+        message: "Internal Server Error",
       });
     }
   },

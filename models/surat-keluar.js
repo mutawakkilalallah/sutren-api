@@ -13,10 +13,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      lampiran: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       perihal: {
         type: DataTypes.STRING,
         allowNull: false,
