@@ -55,7 +55,8 @@ app.use("/api/surat-pengesahan", authentication, pengesahanRouter);
 
 // testing
 app.post("/api/test", async (req, res) => {
-  for (let i = 0; i < 1000; i++) {
+  const jumlah = req.body.jumlah;
+  for (let i = 0; i < angka; i++) {
     await test.create({
       nama: "Test Ke " + i,
     });
@@ -65,7 +66,10 @@ app.post("/api/test", async (req, res) => {
   });
 });
 app.get("/api/test", async (req, res) => {
-  const data = await test.findAll();
+  const limit = req.query.limit;
+  const data = await test.findAll({
+    limit,
+  });
   res.json(data);
 });
 
