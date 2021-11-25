@@ -40,10 +40,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      tujuan: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       perihal: {
         type: Sequelize.STRING,
         allowNull: false,

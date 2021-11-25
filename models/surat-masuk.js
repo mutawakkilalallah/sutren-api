@@ -41,10 +41,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      tujuan: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       perihal: {
         type: DataTypes.STRING,
         allowNull: false,
