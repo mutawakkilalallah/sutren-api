@@ -24,10 +24,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      id_document: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

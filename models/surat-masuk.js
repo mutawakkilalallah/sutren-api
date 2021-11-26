@@ -49,10 +49,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      id_document: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
       createdAt: {
         field: "createdAt",
         type: DataTypes.DATE,

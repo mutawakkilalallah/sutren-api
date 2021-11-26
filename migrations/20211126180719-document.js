@@ -2,41 +2,45 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("user", {
-      uuid: {
-        type: Sequelize.STRING,
+    await queryInterface.createTable("document", {
+      id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      nama: {
+      id_surat: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      username: {
+      kategori: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      password: {
+      url: {
         type: Sequelize.STRING,
-        allowNull: false,
-      },
-      akses: {
-        type: Sequelize.ENUM,
-        values: ["sysadmin", "admin", "supervisor"],
         allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
       },
+      createdBy: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       updatedAt: {
         type: Sequelize.DATE,
+        allowNull: false,
+      },
+      updatedBy: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("user");
+    await queryInterface.dropTable("document");
   },
 };

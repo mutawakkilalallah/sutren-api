@@ -26,10 +26,6 @@ module.exports = (sequelize, DataTypes) => {
         values: ["sysadmin", "admin", "supervisor"],
         allowNull: false,
       },
-      id_picture: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
       createdAt: {
         field: "createdAt",
         type: DataTypes.DATE,

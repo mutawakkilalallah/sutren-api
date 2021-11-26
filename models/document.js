@@ -1,32 +1,26 @@
-const Sequelize = require("sequelize");
-
 module.exports = (sequelize, DataTypes) => {
-  const surat_keluar = sequelize.define(
-    "surat_keluar",
+  const document = sequelize.define(
+    "document",
     {
-      uuid: {
-        type: DataTypes.UUIDV4,
-        defaultValue: Sequelize.UUIDV4,
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
+        allowNull: false,
       },
-      nomer_surat: {
+      id_surat: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      perihal: {
+      kategori: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      isi: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      tanggal_surat: {
-        type: DataTypes.DATE,
+      url: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       createdAt: {
-        field: "createdAt",
         type: DataTypes.DATE,
         allowNull: false,
       },
@@ -35,7 +29,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       updatedAt: {
-        field: "updatedAt",
         type: DataTypes.DATE,
         allowNull: false,
       },
@@ -45,9 +38,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "surat_keluar",
-      timestamp: true,
+      tableName: "document",
     }
   );
-  return surat_keluar;
+  return document;
 };

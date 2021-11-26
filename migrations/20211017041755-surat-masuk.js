@@ -48,10 +48,6 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      id_document: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

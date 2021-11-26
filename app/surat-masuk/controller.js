@@ -1,11 +1,33 @@
 const { Op } = require("sequelize");
 const fs = require("fs");
-const { surat_masuk, tujuan, user, surat_tujuan } = require("../../models");
+const {
+  surat_masuk,
+  tujuan,
+  user,
+  document,
+  surat_tujuan,
+} = require("../../models");
 const validation = require("../../validation/surat-masuk");
 
 // relasi table many to one
 user.hasOne(surat_masuk, { foreignKey: "createdBy" });
 surat_masuk.belongsTo(user, { foreignKey: "createdBy", as: "created_by" });
+user.hasOne(surat_masuk, { foreignKey: "updatedBy" });
+surat_masuk.belongsTo(user, { foreignKey: "updatedBy", as: "updated_by" });
+
+surat_masuk.hasOne(document, { foreignKey: "id_surat", as: "document" });
+document.belongsTo(surat_masuk, { foreignKey: "id_surat" });
+
+user.hasOne(document, { foreignKey: "createdBy" });
+document.belongsTo(user, {
+  foreignKey: "createdBy",
+  as: "created_by",
+});
+user.hasOne(document, { foreignKey: "updatedBy" });
+document.belongsTo(user, {
+  foreignKey: "updatedBy",
+  as: "updated_by",
+});
 
 // relasi tabel many to many
 surat_masuk.belongsToMany(tujuan, {
@@ -67,8 +89,37 @@ module.exports = {
             as: "tujuan_surat",
           },
           {
+            model: document,
+            as: "document",
+            attributes: [
+              "id",
+              "id_surat",
+              "kategori",
+              "url",
+              "createdAt",
+              "updatedAt",
+            ],
+            include: [
+              {
+                model: user,
+                as: "created_by",
+                attributes: ["uuid", "nama", "username", "akses", "createdAt"],
+              },
+              {
+                model: user,
+                as: "updated_by",
+                attributes: ["uuid", "nama", "username", "akses", "createdAt"],
+              },
+            ],
+          },
+          {
             model: user,
             as: "created_by",
+            attributes: ["uuid", "nama", "username", "akses", "createdAt"],
+          },
+          {
+            model: user,
+            as: "updated_by",
             attributes: ["uuid", "nama", "username", "akses", "createdAt"],
           },
         ],
@@ -138,8 +189,37 @@ module.exports = {
             as: "tujuan_surat",
           },
           {
+            model: document,
+            as: "document",
+            attributes: [
+              "id",
+              "id_surat",
+              "kategori",
+              "url",
+              "createdAt",
+              "updatedAt",
+            ],
+            include: [
+              {
+                model: user,
+                as: "created_by",
+                attributes: ["uuid", "nama", "username", "akses", "createdAt"],
+              },
+              {
+                model: user,
+                as: "updated_by",
+                attributes: ["uuid", "nama", "username", "akses", "createdAt"],
+              },
+            ],
+          },
+          {
             model: user,
             as: "created_by",
+            attributes: ["uuid", "nama", "username", "akses", "createdAt"],
+          },
+          {
+            model: user,
+            as: "updated_by",
             attributes: ["uuid", "nama", "username", "akses", "createdAt"],
           },
         ],
