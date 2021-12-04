@@ -252,4 +252,28 @@ module.exports = {
       });
     }
   },
+
+  // filter
+  filter: async (req, res) => {
+    try {
+      // response berhasil
+      res.status(200).json({
+        type: [
+          { text: "Lembaga", value: "Lembaga" },
+          { text: "Person", value: "Person" },
+          { text: "Jabatan", value: "Jabatan" },
+          { text: "Eksternal", value: "Eksternal" },
+        ],
+      });
+    } catch (err) {
+      // jika gagal
+
+      // response error
+      res.status(500).json({
+        statusCode: 500,
+        err: err.message,
+        message: "Internal Server Error",
+      });
+    }
+  },
 };

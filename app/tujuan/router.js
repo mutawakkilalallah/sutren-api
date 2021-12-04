@@ -1,10 +1,20 @@
 const express = require("express");
-const { index, detail, create, edit, destroy } = require("./controller");
+const {
+  index,
+  detail,
+  create,
+  edit,
+  destroy,
+  filter,
+} = require("./controller");
 const router = express.Router();
 const { sysadmin } = require("../../middlewares/authorization");
 
 // get all tujuan
 router.get("/", sysadmin, index);
+
+// filter
+router.get("/filter", sysadmin, filter);
 
 // get tujuan
 router.get("/:id", sysadmin, detail);
