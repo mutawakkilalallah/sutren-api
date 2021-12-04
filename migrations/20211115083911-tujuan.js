@@ -13,8 +13,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      kategori: {
-        type: Sequelize.STRING,
+      type: {
+        type: Sequelize.ENUM,
+        values: ["Jabatan", "Lembaga", "Person", "Eksternal"],
         allowNull: false,
       },
     });

@@ -12,8 +12,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      kategori: {
-        type: DataTypes.STRING,
+      type: {
+        type: DataTypes.ENUM,
+        values: ["Jabatan", "Lembaga", "Person", "Eksternal"],
         allowNull: false,
       },
     },

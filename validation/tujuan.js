@@ -8,10 +8,10 @@ module.exports = {
       "string.empty": "nama harus tidak boleh kosong",
       "any.required": "nama harus harus diisi",
     }),
-    kategori: Joi.string().required().messages({
-      "string.base": "kategori harus berisi huruf",
-      "string.empty": "kategori harus tidak boleh kosong",
-      "any.required": "kategori harus harus diisi",
+    type: Joi.string().required().messages({
+      "string.base": "type harus berisi huruf",
+      "string.empty": "type harus tidak boleh kosong",
+      "any.required": "type harus harus diisi",
     }),
   }),
 
@@ -21,9 +21,9 @@ module.exports = {
       "string.base": "nama harus berisi huruf",
       "string.empty": "nama harus tidak boleh kosong",
     }),
-    kategori: Joi.string().messages({
-      "string.base": "kategori harus berisi huruf",
-      "string.empty": "kategori harus tidak boleh kosong",
+    type: Joi.string().messages({
+      "string.base": "type harus berisi huruf",
+      "string.empty": "type harus tidak boleh kosong",
     }),
   }),
 };
