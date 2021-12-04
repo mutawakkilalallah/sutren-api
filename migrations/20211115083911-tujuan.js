@@ -13,6 +13,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      kategori: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
     });
   },
 
