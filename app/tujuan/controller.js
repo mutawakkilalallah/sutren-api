@@ -10,6 +10,7 @@ module.exports = {
 
       // mengambil parameter
       const search = req.query.cari || "";
+      const type = req.query.type || "";
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 5;
       const offset = 0 + (page - 1) * limit;
@@ -17,8 +18,13 @@ module.exports = {
       // mengambil data ke database
       const data = await tujuan.findAndCountAll({
         where: {
-          nama: {
-            [Op.like]: "%" + search + "%",
+          [Op.and]: {
+            nama: {
+              [Op.like]: "%" + search + "%",
+            },
+            type: {
+              [Op.like]: "%" + type + "%",
+            },
           },
         },
         limit: limit,
