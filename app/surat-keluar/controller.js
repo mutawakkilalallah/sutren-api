@@ -126,16 +126,16 @@ module.exports = {
       });
 
       // cek apakah ada data
-      if (data.count < 1) {
+      if (data.rows.length < 1) {
         // jika tidak ada data
 
         // response kosong
         res
           .status(200)
           .set({
-            "x-data-total": data.count,
+            "x-data-total": data.rows.length,
             "x-pagination-data-limit": limit,
-            "x-pagination-total-page": Math.ceil(data.count / limit),
+            "x-pagination-total-page": Math.ceil(data.rows.length / limit),
           })
           .json([]);
       } else {
@@ -145,9 +145,9 @@ module.exports = {
         res
           .status(200)
           .set({
-            "x-data-total": data.count,
+            "x-data-total": data.rows.length,
             "x-pagination-data-limit": limit,
-            "x-pagination-total-page": Math.ceil(data.count / limit),
+            "x-pagination-total-page": Math.ceil(data.rows.length / limit),
           })
           .json(data.rows);
       }
