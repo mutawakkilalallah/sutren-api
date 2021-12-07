@@ -23,6 +23,12 @@ module.exports = {
       "string.empty": "tanggal surat harus tidak boleh kosong",
       "any.required": "tanggal surat harus harus diisi",
     }),
+    id_jenis: Joi.required().messages({
+      "any.required": "jenis surat harus harus diisi",
+    }),
+    isPublic: Joi.required().messages({
+      "any.required": "status surat harus harus diisi",
+    }),
     tujuan: Joi.required().messages({
       "any.required": "tujuan surat harus harus diisi",
     }),
@@ -48,6 +54,12 @@ module.exports = {
     tanggal_surat: Joi.string().messages({
       "string.base": "isi surat harus berisi huruf",
       "string.empty": "isi surat harus tidak boleh kosong",
+    }),
+    id_jenis: Joi.required().messages({
+      "any.required": "jenis surat harus harus diisi",
+    }),
+    isPublic: Joi.required().messages({
+      "any.required": "status surat harus harus diisi",
     }),
   }),
 };

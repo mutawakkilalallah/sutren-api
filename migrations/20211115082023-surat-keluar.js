@@ -24,6 +24,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
+      id_jenis: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      isPublic: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

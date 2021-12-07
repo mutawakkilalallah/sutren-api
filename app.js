@@ -16,6 +16,7 @@ const documentRouter = require("./app/document/router");
 const authentication = require("./middlewares/authentication");
 const tujuanRouter = require("./app/tujuan/router");
 const pengesahanRouter = require("./app/pengesahan/router");
+const jenisRouter = require("./app/jenis/router");
 
 // morgan
 app.use(morgan("dev"));
@@ -53,5 +54,7 @@ app.use("/api/document", authentication, documentRouter);
 app.use("/api/surat-tujuan", authentication, tujuanRouter);
 // routing pengesahan
 app.use("/api/surat-pengesahan", authentication, pengesahanRouter);
+// routing jenis
+app.use("/api/surat-jenis", authentication, jenisRouter);
 
 app.listen(port, console.log("server running on port " + port));

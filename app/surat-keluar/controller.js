@@ -6,6 +6,7 @@ const {
   pengesahan,
   user,
   document,
+  jenis,
   surat_tujuan,
   surat_pengesahan,
 } = require("../../models");
@@ -16,6 +17,8 @@ user.hasOne(surat_keluar, { foreignKey: "createdBy" });
 surat_keluar.belongsTo(user, { foreignKey: "createdBy", as: "created_by" });
 user.hasOne(surat_keluar, { foreignKey: "updatedBy" });
 surat_keluar.belongsTo(user, { foreignKey: "updatedBy", as: "updated_by" });
+jenis.hasOne(surat_keluar, { foreignKey: "id_jenis" });
+surat_keluar.belongsTo(jenis, { foreignKey: "id_jenis", as: "jenis_surat" });
 
 surat_keluar.hasOne(document, { foreignKey: "id_surat", as: "document" });
 document.belongsTo(surat_keluar, { foreignKey: "id_surat" });
@@ -76,10 +79,15 @@ module.exports = {
           "perihal",
           "isi",
           "tanggal_surat",
+          "isPublic",
           "createdAt",
           "updatedAt",
         ],
         include: [
+          {
+            model: jenis,
+            as: "jenis_surat",
+          },
           {
             model: tujuan,
             as: "tujuan_surat",
@@ -176,10 +184,15 @@ module.exports = {
           "perihal",
           "isi",
           "tanggal_surat",
+          "isPublic",
           "createdAt",
           "updatedAt",
         ],
         include: [
+          {
+            model: jenis,
+            as: "jenis_surat",
+          },
           {
             model: tujuan,
             as: "tujuan_surat",
@@ -281,6 +294,8 @@ module.exports = {
           perihal: value.perihal,
           isi: value.isi,
           tanggal_surat: value.tanggal_surat,
+          id_jenis: value.id_jenis,
+          isPublic: value.isPublic,
           createdBy: req.uuid,
           updatedBy: req.uuid,
         });

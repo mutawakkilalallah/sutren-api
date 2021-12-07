@@ -25,6 +25,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      id_jenis: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      isPublic: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
       createdAt: {
         field: "createdAt",
         type: DataTypes.DATE,
