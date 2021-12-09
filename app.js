@@ -12,6 +12,7 @@ const { uploadStorage, uploadFilter } = require("./helper/multer");
 const suratMasukRouter = require("./app/surat-masuk/router");
 const suratKeluarRouter = require("./app/surat-keluar/router");
 const userRouter = require("./app/user/router");
+const disposisiRouter = require("./app/disposisi/router");
 const documentRouter = require("./app/document/router");
 const authentication = require("./middlewares/authentication");
 const tujuanRouter = require("./app/tujuan/router");
@@ -50,6 +51,8 @@ app.use("/api/surat-keluar", authentication, suratKeluarRouter);
 app.use("/api/user", userRouter);
 // routing document
 app.use("/api/document", authentication, documentRouter);
+// routing disposisi
+app.use("/api/disposisi", authentication, disposisiRouter);
 // routing tujuan
 app.use("/api/surat-tujuan", authentication, tujuanRouter);
 // routing pengesahan
