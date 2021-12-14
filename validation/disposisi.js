@@ -21,6 +21,9 @@ module.exports = {
       "string.base": "catatan pengasuh harus berisi huruf",
       "string.empty": "catatan pengasuh tidak boleh kosong",
     }),
+    tujuan: Joi.required().messages({
+      "any.required": "tujuan disposisi harus diisi",
+    }),
   }),
 
   // edit validation

@@ -1,10 +1,26 @@
 const { Op } = require("sequelize");
-const { surat_masuk, tujuan, disposisi } = require("../../models");
+const {
+  surat_masuk,
+  tujuan,
+  disposisi,
+  surat_tujuan,
+} = require("../../models");
 const validation = require("../../validation/disposisi");
 
 // relasi table many to one
 surat_masuk.hasOne(disposisi, { foreignKey: "id_surat" });
 disposisi.belongsTo(surat_masuk, { foreignKey: "id_surat", as: "surat" });
+
+// relasi tabel many to many
+disposisi.belongsToMany(tujuan, {
+  through: "surat_tujuan",
+  foreignKey: "id_surat",
+  as: "tujuan_disposisi",
+});
+tujuan.belongsToMany(disposisi, {
+  through: "surat_tujuan",
+  foreignKey: "id_tujuan",
+});
 
 module.exports = {
   // get all disposisi
@@ -45,23 +61,29 @@ module.exports = {
           "catatan_pengasuh",
           "status",
         ],
-        include: {
-          model: surat_masuk,
-          as: "surat",
-          attributes: [
-            "uuid",
-            "asal",
-            "tanggal_terima",
-            "tanggal_surat",
-            "nomer_surat",
-            "perihal",
-            "nomer_agenda",
-          ],
-          include: {
+        include: [
+          {
             model: tujuan,
-            as: "tujuan_surat",
+            as: "tujuan_disposisi",
           },
-        },
+          {
+            model: surat_masuk,
+            as: "surat",
+            attributes: [
+              "uuid",
+              "asal",
+              "tanggal_terima",
+              "tanggal_surat",
+              "nomer_surat",
+              "perihal",
+              "nomer_agenda",
+            ],
+            include: {
+              model: tujuan,
+              as: "tujuan_surat",
+            },
+          },
+        ],
       });
 
       // cek apakah ada data
@@ -118,23 +140,29 @@ module.exports = {
           "catatan_pengasuh",
           "status",
         ],
-        include: {
-          model: surat_masuk,
-          as: "surat",
-          attributes: [
-            "uuid",
-            "asal",
-            "tanggal_terima",
-            "tanggal_surat",
-            "nomer_surat",
-            "perihal",
-            "nomer_agenda",
-          ],
-          include: {
+        include: [
+          {
             model: tujuan,
-            as: "tujuan_surat",
+            as: "tujuan_disposisi",
           },
-        },
+          {
+            model: surat_masuk,
+            as: "surat",
+            attributes: [
+              "uuid",
+              "asal",
+              "tanggal_terima",
+              "tanggal_surat",
+              "nomer_surat",
+              "perihal",
+              "nomer_agenda",
+            ],
+            include: {
+              model: tujuan,
+              as: "tujuan_surat",
+            },
+          },
+        ],
         where: {
           id: req.params.id,
         },
@@ -188,7 +216,7 @@ module.exports = {
         // jika berhasil
 
         // insert data ke database
-        await disposisi.create({
+        const data = await disposisi.create({
           id_surat: req.params.uuid,
           keamanan: value.keamanan,
           catatan_sekretaris: value.catatan_sekretaris,
@@ -196,6 +224,16 @@ module.exports = {
           catatan_pengasuh: value.catatan_pengasuh,
           status: "Proses",
         });
+
+        // mapping dan insert tujuan
+        const dataTujuan = value.tujuan.map((tj) => {
+          return {
+            id_surat: data.id,
+            id_tujuan: tj,
+          };
+        });
+
+        await surat_tujuan.bulkCreate(dataTujuan);
 
         // response berhasil
         res.status(201).json({
