@@ -51,6 +51,9 @@ module.exports = {
 
       // mengambil parameter
       const search = req.query.cari || "";
+      const jenisFilter = req.query.jenis || "";
+      const tujuanFilter = req.query.tujuan || "";
+      const pengesahanFilter = req.query.pengesahan || "";
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 5;
       const offset = 0 + (page - 1) * limit;
@@ -58,15 +61,24 @@ module.exports = {
       // mengambil data ke database
       const data = await surat_keluar.findAndCountAll({
         where: {
-          [Op.or]: [
+          [Op.and]: [
             {
-              nomer_surat: {
-                [Op.like]: "%" + search + "%",
-              },
+              [Op.or]: [
+                {
+                  nomer_surat: {
+                    [Op.like]: "%" + search + "%",
+                  },
+                },
+                {
+                  perihal: {
+                    [Op.like]: "%" + search + "%",
+                  },
+                },
+              ],
             },
             {
-              perihal: {
-                [Op.like]: "%" + search + "%",
+              id_jenis: {
+                [Op.like]: "%" + jenisFilter + "%",
               },
             },
           ],
@@ -91,10 +103,20 @@ module.exports = {
           {
             model: tujuan,
             as: "tujuan_surat",
+            where: {
+              id: {
+                [Op.like]: "%" + tujuanFilter + "%",
+              },
+            },
           },
           {
             model: pengesahan,
             as: "pengesahan_surat",
+            where: {
+              id: {
+                [Op.like]: "%" + pengesahanFilter + "%",
+              },
+            },
           },
           {
             model: document,
@@ -438,6 +460,44 @@ module.exports = {
           message: "Berhasil menghapus surat",
         });
       }
+    } catch (err) {
+      // jika gagal
+
+      // response error
+      res.status(500).json({
+        statusCode: 500,
+        err: err.message,
+        message: "Internal Server Error",
+      });
+    }
+  },
+
+  // filter
+  filter: async (req, res) => {
+    try {
+      // get filter ke database
+      const dataJenis = await jenis.findAndCountAll({
+        attributes: ["id", "nama"],
+      });
+      const dataTujuan = await tujuan.findAndCountAll({
+        attributes: ["id", "nama"],
+      });
+      const dataPengesahan = await pengesahan.findAndCountAll({
+        attributes: ["id", "nama"],
+      });
+
+      // response berhasil
+      res.status(200).json([
+        {
+          jenis: dataJenis.rows,
+        },
+        {
+          tujuan: dataTujuan.rows,
+        },
+        {
+          pengesahan: dataPengesahan.rows,
+        },
+      ]);
     } catch (err) {
       // jika gagal
 

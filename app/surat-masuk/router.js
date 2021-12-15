@@ -1,10 +1,20 @@
 const express = require("express");
-const { index, create, detail, destroy, edit } = require("./controller");
+const {
+  index,
+  create,
+  detail,
+  destroy,
+  edit,
+  filter,
+} = require("./controller");
 const router = express.Router();
 const { admin } = require("../../middlewares/authorization");
 
 // routing data semua surat
 router.get("/", admin, index);
+
+// filter
+router.get("/filter", admin, filter);
 
 // routing data surat
 router.get("/:uuid", admin, detail);

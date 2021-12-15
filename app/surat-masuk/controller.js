@@ -8,6 +8,7 @@ const {
   surat_tujuan,
 } = require("../../models");
 const validation = require("../../validation/surat-masuk");
+// const tujuan = require("../../validation/tujuan");
 
 // relasi table many to one
 user.hasOne(surat_masuk, { foreignKey: "createdBy" });
@@ -48,6 +49,7 @@ module.exports = {
 
       // mengambil parameter
       const search = req.query.cari || "";
+      const tujuanFilter = req.query.tujuan || "";
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 5;
       const offset = 0 + (page - 1) * limit;
@@ -87,6 +89,11 @@ module.exports = {
           {
             model: tujuan,
             as: "tujuan_surat",
+            where: {
+              id: {
+                [Op.like]: "%" + tujuanFilter + "%",
+              },
+            },
           },
           {
             model: document,
@@ -425,6 +432,32 @@ module.exports = {
           message: "Berhasil menghapus surat",
         });
       }
+    } catch (err) {
+      // jika gagal
+
+      // response error
+      res.status(500).json({
+        statusCode: 500,
+        err: err.message,
+        message: "Internal Server Error",
+      });
+    }
+  },
+
+  // filter
+  filter: async (req, res) => {
+    try {
+      // get tujuan ke database
+      const dataTujuan = await tujuan.findAndCountAll({
+        attributes: ["id", "nama"],
+      });
+
+      // response berhasil
+      res.status(200).json([
+        {
+          tujuan: dataTujuan.rows,
+        },
+      ]);
     } catch (err) {
       // jika gagal
 
