@@ -9,6 +9,7 @@ const path = require("path");
 const cors = require("cors");
 
 const { uploadStorage, uploadFilter } = require("./helper/multer");
+const dashboardRouter = require("./app/dashboard/router");
 const suratMasukRouter = require("./app/surat-masuk/router");
 const suratKeluarRouter = require("./app/surat-keluar/router");
 const userRouter = require("./app/user/router");
@@ -59,5 +60,7 @@ app.use("/api/surat-tujuan", authentication, tujuanRouter);
 app.use("/api/surat-pengesahan", authentication, pengesahanRouter);
 // routing jenis
 app.use("/api/surat-jenis", authentication, jenisRouter);
+// routing dashboard
+app.use("/api/", authentication, dashboardRouter);
 
 app.listen(port, console.log("server running on port " + port));
