@@ -49,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      isDisposisi: {
+        type: DataTypes.ENUM,
+        values: ["Y", "T"],
+        allowNull: false,
+      },
       createdAt: {
         field: "createdAt",
         type: DataTypes.DATE,

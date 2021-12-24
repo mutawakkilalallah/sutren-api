@@ -48,6 +48,11 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      isDisposisi: {
+        type: Sequelize.ENUM,
+        values: ["Y", "T"],
+        allowNull: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

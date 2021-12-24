@@ -84,6 +84,7 @@ module.exports = {
           "alamat",
           "perihal",
           "keterangan",
+          "isDisposisi",
         ],
         include: [
           {
@@ -189,6 +190,7 @@ module.exports = {
           "alamat",
           "perihal",
           "keterangan",
+          "isDisposisi",
         ],
         include: [
           {
@@ -294,6 +296,7 @@ module.exports = {
           alamat: value.alamat,
           perihal: value.perihal,
           keterangan: value.keterangan,
+          isDisposisi: "T",
           createdBy: req.uuid,
           updatedBy: req.uuid,
         });
@@ -311,6 +314,7 @@ module.exports = {
         // response berhasil
         res.status(201).json({
           message: "Berhasil menambahkan surat",
+          uuid_surat: data.uuid,
         });
       }
     } catch (err) {

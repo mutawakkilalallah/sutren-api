@@ -29,7 +29,8 @@ module.exports = {
         allowNull: false,
       },
       isPublic: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.ENUM,
+        values: ["Y", "T"],
         allowNull: false,
       },
       createdAt: {

@@ -124,8 +124,8 @@ module.exports = {
     }
   },
 
-  // get detail disposisi
-  detail: async (req, res) => {
+  // get detail disposisi by Id
+  detailById: async (req, res) => {
     try {
       // jika berhasil
 
@@ -196,6 +196,78 @@ module.exports = {
     }
   },
 
+  // get detail disposisi by uuid
+  detailByUuid: async (req, res) => {
+    try {
+      // jika berhasil
+
+      // mengambil data ke database
+      const data = await disposisi.findOne({
+        attributes: [
+          "id",
+          "id_surat",
+          "keamanan",
+          "catatan_sekretaris",
+          "catatan_kepala",
+          "catatan_pengasuh",
+          "status",
+        ],
+        include: [
+          {
+            model: tujuan,
+            as: "tujuan_disposisi",
+          },
+          {
+            model: surat_masuk,
+            as: "surat",
+            attributes: [
+              "uuid",
+              "asal",
+              "tanggal_terima",
+              "tanggal_surat",
+              "nomer_surat",
+              "perihal",
+              "nomer_agenda",
+            ],
+            include: {
+              model: tujuan,
+              as: "tujuan_surat",
+            },
+          },
+        ],
+        where: {
+          id_surat: req.params.uuid,
+        },
+      });
+
+      // cek apakah ada data
+      if (!data) {
+        // jika tidak ada data
+
+        // response kosong
+        res.status(404).json({
+          statusCode: 404,
+          error: "NOT FOUND",
+          message: "Disposisi tidak ditemukan",
+        });
+      } else {
+        // jika ada data
+
+        // response berhasil
+        res.status(200).json(data);
+      }
+    } catch (err) {
+      // jika gagal
+
+      // response error
+      res.status(500).json({
+        statusCode: 500,
+        err: err.message,
+        message: "Internal Server Error",
+      });
+    }
+  },
+
   // create disposisi
   create: async (req, res) => {
     try {
@@ -215,30 +287,46 @@ module.exports = {
       } else {
         // jika berhasil
 
-        // insert data ke database
-        const data = await disposisi.create({
-          id_surat: req.params.uuid,
-          keamanan: value.keamanan,
-          catatan_sekretaris: value.catatan_sekretaris,
-          catatan_kepala: value.catatan_kepala,
-          catatan_pengasuh: value.catatan_pengasuh,
-          status: "Proses",
+        // cek apakah sudah disposisi
+        const surat = await surat_masuk.findOne({
+          where: {
+            uuid: req.params.uuid,
+          },
         });
 
-        // mapping dan insert tujuan
-        const dataTujuan = value.tujuan.map((tj) => {
-          return {
-            id_surat: data.id,
-            id_tujuan: tj,
-          };
-        });
+        if (surat.isDisposisi == "Y") {
+          // respon bad request
+          res.status(400).json({
+            statusCode: 400,
+            err: "BAD REQUEST",
+            message: "surat sudah selesai di disposisi",
+          });
+        } else {
+          // insert data ke database
+          const data = await disposisi.create({
+            id_surat: req.params.uuid,
+            keamanan: value.keamanan,
+            catatan_sekretaris: value.catatan_sekretaris,
+            catatan_kepala: value.catatan_kepala,
+            catatan_pengasuh: value.catatan_pengasuh,
+            status: "Proses",
+          });
 
-        await surat_tujuan.bulkCreate(dataTujuan);
+          // mapping dan insert tujuan
+          const dataTujuan = value.tujuan.map((tj) => {
+            return {
+              id_surat: data.id,
+              id_tujuan: tj,
+            };
+          });
 
-        // response berhasil
-        res.status(201).json({
-          message: "Berhasil menambahkan disposisi surat",
-        });
+          await surat_tujuan.bulkCreate(dataTujuan);
+
+          // response berhasil
+          res.status(201).json({
+            message: "Berhasil menambahkan disposisi surat",
+          });
+        }
       }
     } catch (err) {
       // jika gagal
@@ -279,9 +367,20 @@ module.exports = {
 
         // jika berhasil
 
-        // insert data ke database
+        // cari surat
+        const surat = await surat_masuk.findOne({
+          where: {
+            uuid: data.id_surat,
+          },
+        });
+
+        // update data ke database
         await data.update({
           status: "Selesai",
+        });
+
+        await surat.update({
+          isDisposisi: "Y",
         });
 
         // response berhasil

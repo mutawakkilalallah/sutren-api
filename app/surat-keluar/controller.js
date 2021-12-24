@@ -345,6 +345,7 @@ module.exports = {
         // response berhasil
         res.status(201).json({
           message: "Berhasil menambahkan surat",
+          uuid_surat: data.uuid,
         });
       }
     } catch (err) {

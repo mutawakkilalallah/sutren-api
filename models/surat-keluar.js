@@ -30,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       isPublic: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.ENUM,
+        values: ["Y", "T"],
         allowNull: false,
       },
       createdAt: {
